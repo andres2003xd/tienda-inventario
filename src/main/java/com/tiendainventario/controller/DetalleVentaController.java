@@ -7,6 +7,7 @@ import com.tiendainventario.repository.DetalleVentaRepository;
 import com.tiendainventario.repository.ProductoRepository;
 import com.tiendainventario.repository.VentaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/detallesventas")
 public class DetalleVentaController {
+
 
     @Autowired
     private DetalleVentaRepository detalleVentaRepository;
@@ -415,21 +417,19 @@ public class DetalleVentaController {
 
     // ELIMINAR DETALLE DE VENTA
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<?> eliminarDetalleVenta(@PathVariable Long id) {
         if (!detalleVentaRepository.existsById(id)) {
-            Map<String, Object> detalles = new LinkedHashMap<>();
-            detalles.put("error", "No existe un detalle de venta con ID " + id);
-            detalles.put("sugerencia", "Verifique el ID o consulte la lista de detalles de venta en GET /api/detallesventas");
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(crearRespuestaError("Detalle de venta no encontrado", detalles));
+                    .body(crearRespuestaError("Detalle no encontrado",
+                            Map.of("error", "No existe detalle con ID " + id)));
         }
 
         detalleVentaRepository.deleteById(id);
-
-        Map<String, Object> respuesta = new LinkedHashMap<>();
-        respuesta.put("status", "éxito");
-        respuesta.put("mensaje", "Detalle de venta eliminado correctamente");
-        respuesta.put("id_eliminado", id);
-        return ResponseEntity.ok(respuesta);
+        return ResponseEntity.ok(Map.of(
+                "status", "éxito",
+                "mensaje", "Detalle de venta eliminado correctamente",
+                "id_eliminado", id
+        ));
     }
 }

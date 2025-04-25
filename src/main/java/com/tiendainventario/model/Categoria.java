@@ -1,5 +1,4 @@
 package com.tiendainventario.model;
-
 import jakarta.persistence.*;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;

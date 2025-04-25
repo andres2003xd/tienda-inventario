@@ -3,6 +3,7 @@ package com.tiendainventario.controller;
 import com.tiendainventario.model.Venta;
 import com.tiendainventario.repository.ClienteRepository;
 import com.tiendainventario.repository.VentaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -292,30 +293,27 @@ public class VentaController {
 
     // ELIMINAR VENTA
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<?> eliminarVenta(@PathVariable Long id) {
         if (!ventaRepository.existsById(id)) {
-            Map<String, Object> detalles = new LinkedHashMap<>();
-            detalles.put("error", "No existe una venta con ID " + id);
-            detalles.put("sugerencia", "Verifique el ID o consulte la lista de ventas en GET /api/ventas");
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(crearRespuestaError("Venta no encontrada", detalles));
+                    .body(crearRespuestaError("Venta no encontrada",
+                            Map.of("error", "No existe venta con ID " + id)));
         }
 
-        if (ventaRepository.count() == 1) {
-            Map<String, Object> detalles = new LinkedHashMap<>();
-            detalles.put("error", "No se puede eliminar la venta, PORQUE ESTA EN USO");
-            detalles.put("sugerencia", "---Primero elimine el DetallesVenta---");
-            detalles.put("DATO", "Busque en GET /api/detallesventas para ver la conexion entre ventas y detallesventas... TAMBIEN PUEDE ELIMINAR O CAMBIAR LA VENTA desde PUT /api/detallesventas/...");
+        // Verificar detalles de venta asociados
+        if (ventaRepository.existsDetallesByVentaId(id)) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(crearRespuestaError("NO SE PUEDE ELIMINAR LA VENTA", detalles));
+                    .body(crearRespuestaError("No se puede eliminar la venta",
+                            Map.of("razón", "Existen detalles de venta asociados",
+                                    "solución", "Elimine primero los detalles relacionados")));
         }
 
-            ventaRepository.deleteById(id);
-
-            Map<String, Object> respuesta = new LinkedHashMap<>();
-            respuesta.put("status", "éxito");
-            respuesta.put("mensaje", "Venta eliminada correctamente");
-            respuesta.put("id_eliminado", id);
-            return ResponseEntity.ok(respuesta);
-        }
+        ventaRepository.deleteById(id);
+        return ResponseEntity.ok(Map.of(
+                "status", "éxito",
+                "mensaje", "Venta eliminada correctamente",
+                "id_eliminado", id
+        ));
+    }
 }

@@ -1,15 +1,16 @@
 package com.tiendainventario.controller;
 
 import com.tiendainventario.model.Producto;
-import com.tiendainventario.repository.ProductoRepository;
-import com.tiendainventario.repository.ProveedorRepository;
+import com.tiendainventario.repository.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.*;
-import com.tiendainventario.repository.CategoriaRepository;
+
 
 @RestController
 @RequestMapping("/api/productos")
@@ -21,6 +22,8 @@ public class ProductoController {
     private CategoriaRepository categoriaRepository;
     @Autowired
     private ProveedorRepository proveedorRepository;
+    @Autowired
+    private DetalleVentaRepository detalleVentaRepository;
 
     // Método para respuestas de error
     private Map<String, Object> crearRespuestaError(String mensaje, Object detalles) {
@@ -370,32 +373,29 @@ public class ProductoController {
     }
 
     // ELIMINAR PRODUCTO
-
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<?> eliminarProducto(@PathVariable Long id) {
         if (!productoRepository.existsById(id)) {
-            Map<String, Object> detalles = new LinkedHashMap<>();
-            detalles.put("error", "No existe un producto con ID " + id);
-            detalles.put("sugerencia", "Verifique el ID o consulte la lista de productos en GET /api/productos");
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(crearRespuestaError("Producto no encontrado", detalles));
+                    .body(crearRespuestaError("Producto no encontrado",
+                            Map.of("error", "No existe producto con ID " + id)));
         }
 
-        try {
-            productoRepository.deleteById(id);
-        } catch (Exception e) {
-            Map<String, Object> detalles = new LinkedHashMap<>();
-            detalles.put("error", "No se puede eliminar el producto, PORQUE ESTA EN USO");
-            detalles.put("sugerencia", "---Primero elimine el Detalleventa---");
-            detalles.put("DATO", "Busque en GET /api/detalleventas para ver la conexion entre productos y detallesventas.... TAMBIEN PUEDE ELIMINAR O CAMBIAR EL PRODUCTO desde PUT /api/detallesventas/...");
+        if (detalleVentaRepository.existsByProductoId(id)) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(crearRespuestaError("NO SE PUEDE ELIMINAR EL PRODUCTO", detalles));
+                    .body(crearRespuestaError("No se puede eliminar el producto",
+                            Map.of(
+                                    "razón", "El producto está asociado a ventas",
+                                    "solución", "Elimine primero los detalles de venta relacionados"
+                            )));
         }
 
-        Map<String, Object> respuesta = new LinkedHashMap<>();
-        respuesta.put("status", "éxito");
-        respuesta.put("mensaje", "Producto eliminado correctamente");
-        respuesta.put("id_eliminado", id);
-        return ResponseEntity.ok(respuesta);
+        productoRepository.deleteById(id);
+        return ResponseEntity.ok(Map.of(
+                "status", "éxito",
+                "mensaje", "Producto eliminado correctamente",
+                "id_eliminado", id
+        ));
     }
 }

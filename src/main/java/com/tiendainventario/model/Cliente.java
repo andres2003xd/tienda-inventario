@@ -20,8 +20,9 @@ public class Cliente {
     private String email;
 
     @OneToMany(mappedBy = "cliente")
-    @JsonIgnore
     private List<Venta> ventas;
+
+
 
     public Cliente(Long id, String nombre, String direccion, String telefono, String email) {
         this.id = id;

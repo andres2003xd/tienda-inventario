@@ -2,14 +2,17 @@ package com.tiendainventario.controller;
 
 import com.tiendainventario.model.Cliente;
 import com.tiendainventario.repository.ClienteRepository;
+import com.tiendainventario.repository.VentaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/clientes")
@@ -18,7 +21,11 @@ public class ClienteController {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    // Metodo para respuestas de error
+    @Autowired
+    private VentaRepository ventaRepository;
+
+
+    //metodo para crearRespuestaError
     private Map<String, Object> crearRespuestaError(String mensaje, Object detalles) {
         Map<String, Object> respuesta = new LinkedHashMap<>();
         respuesta.put("status", "error");
@@ -282,33 +289,33 @@ public class ClienteController {
     }
 
     // ELIMINAR CLIENTE
+
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<?> eliminarCliente(@PathVariable Long id) {
         if (!clienteRepository.existsById(id)) {
-            Map<String, Object> detalles = new LinkedHashMap<>();
-            detalles.put("error", "No existe un cliente con ID " + id);
-            detalles.put("sugerencia", "Verifique el ID o consulte la lista de clientes en GET /api/clientes");
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(crearRespuestaError("Cliente no encontrado", detalles));
+                    .body(crearRespuestaError("Cliente no encontrado",
+                            Map.of("error", "No existe cliente con ID " + id)));
         }
 
-
-        if (clienteRepository.count() == 1) {
-            Map<String, Object> detalles = new LinkedHashMap<>();
-            detalles.put("error", "No se puede eliminar el cliente, PORQUE ESTA EN USO");
-            detalles.put("sugerencia", "---Primero elimine la Venta---");
-            detalles.put("DATO", "Busque en GET /api/ventas para ver la conexion entre clientes y ventas... TAMBIEN PUEDE ELIMINAR O CAMBIAR EL CLIENTE desde PUT /api/ventas/...");
+        if (ventaRepository.existsByClienteId(id)) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(crearRespuestaError("NO SE PUEDE ELIMINAR EL CLIENTE", detalles));
+                    .body(crearRespuestaError("No se puede eliminar el cliente",
+                            Map.of(
+                                    "razón", "El cliente tiene ventas asociadas",
+                                    "solución", "Elimine primero las ventas relacionadas",
+                                    "Consulta en", "GET /api/ventas"
+                            )));
         }
-
 
         clienteRepository.deleteById(id);
-
-        Map<String, Object> respuesta = new LinkedHashMap<>();
-        respuesta.put("status", "éxito");
-        respuesta.put("mensaje", "Cliente eliminado correctamente");
-        respuesta.put("id_eliminado", id);
-        return ResponseEntity.ok(respuesta);
+        return ResponseEntity.ok(Map.of(
+                "status", "éxito",
+                "mensaje", "Cliente eliminado correctamente",
+                "id_eliminado", id
+        ));
     }
+
+
 }

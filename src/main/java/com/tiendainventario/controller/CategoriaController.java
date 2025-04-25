@@ -2,7 +2,9 @@ package com.tiendainventario.controller;
 
 import com.tiendainventario.model.Categoria;
 import com.tiendainventario.repository.CategoriaRepository;
+import com.tiendainventario.repository.ProductoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +15,12 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/categorias")
 public class CategoriaController {
-    
+
     @Autowired
     private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private ProductoRepository productoRepository;
 
     // Metodo para respuestas de error
     private Map<String, Object> crearRespuestaError(String mensaje, Object detalles) {
@@ -237,30 +242,28 @@ public class CategoriaController {
 
     // ELIMINAR CATEGORÍA
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<?> eliminarCategoria(@PathVariable Long id) {
         if (!categoriaRepository.existsById(id)) {
-            Map<String, Object> detalles = new LinkedHashMap<>();
-            detalles.put("error", "No existe una categoría con ID " + id);
-            detalles.put("sugerencia", "Verifique el ID o consulte la lista de categorías en GET /api/categorias");
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(crearRespuestaError("Categoría no encontrada", detalles));
-        }
-        if (categoriaRepository.count() == 1) {
-            Map<String, Object> detalles = new LinkedHashMap<>();
-            detalles.put("error", "No se puede eliminar la categoria, PORQUE ESTA EN USO");
-            detalles.put("sugerencia", "---Primero elimine el Producto---");
-            detalles.put("DATO", "Busque en GET /api/productos para ver la conexion entre categorias y productos... TAMBIEN PUEDE ELIMINAR O CAMBIAR LA CATEGORIA desde PUT /api/productos/...");
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(crearRespuestaError("NO SE PUEDE ELIMINAR LA CATEGORIA", detalles));
+                    .body(crearRespuestaError("Categoría no encontrada",
+                            Map.of("error", "No existe categoría con ID " + id)));
         }
 
+        if (productoRepository.existsByCategoriaId(id)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(crearRespuestaError("No se puede eliminar la categoría",
+                            Map.of(
+                                    "razón", "La categoría tiene productos asociados",
+                                    "solución", "Elimine o actualice primero los productos relacionados"
+                            )));
+        }
 
         categoriaRepository.deleteById(id);
-
-        Map<String, Object> respuesta = new LinkedHashMap<>();
-        respuesta.put("status", "éxito");
-        respuesta.put("mensaje", "Categoría eliminada correctamente");
-        respuesta.put("id_eliminado", id);
-        return ResponseEntity.ok(respuesta);
+        return ResponseEntity.ok(Map.of(
+                "status", "éxito",
+                "mensaje", "Categoría eliminada correctamente",
+                "id_eliminado", id
+        ));
     }
 }

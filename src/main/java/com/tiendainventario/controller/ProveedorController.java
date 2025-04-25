@@ -2,11 +2,13 @@ package com.tiendainventario.controller;
 
 import com.tiendainventario.model.Proveedor;
 import com.tiendainventario.repository.ProveedorRepository;
+import com.tiendainventario.repository.ProductoRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.*;
 
@@ -16,6 +18,9 @@ public class ProveedorController {
 
     @Autowired
     private ProveedorRepository proveedorRepository;
+
+    @Autowired
+    private ProductoRepository productoRepository;
 
     // Metodo para generar ejemplo de proveedor
     private Map<String, Object> generarEjemploProveedor() {
@@ -285,29 +290,28 @@ public class ProveedorController {
 
     // ELIMINAR PROVEEDOR
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<?> eliminarProveedor(@PathVariable Long id) {
         if (!proveedorRepository.existsById(id)) {
-            Map<String, Object> detalles = new LinkedHashMap<>();
-            detalles.put("error", "No existe un proveedor con ID " + id);
-            detalles.put("sugerencia", "Verifique el ID o consulte la lista de proveedores en GET /api/proveedores");
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(crearRespuestaError("Proveedor no encontrado", detalles));
+                    .body(crearRespuestaError("Proveedor no encontrado",
+                            Map.of("error", "No existe proveedor con ID " + id)));
         }
-        if (proveedorRepository.count() == 1) {
-            Map<String, Object> detalles = new LinkedHashMap<>();
-            detalles.put("error", "No se puede eliminar el proveedor, PORQUE ESTA EN USO");
-            detalles.put("sugerencia", "---Primero elimine el Producto---");
-            detalles.put("DATO", "Busque en GET /api/productos para ver la conexion entre proveedores y productos.... TAMBIEN PUEDE ELIMINAR O CAMBIAR EL PROVEEDOR desde PUT /api/productos/...");
+
+        if (productoRepository.existsByProveedorId(id)) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(crearRespuestaError("NO SE PUEDE ELIMINAR EL PROVEEDOR", detalles));
+                    .body(crearRespuestaError("No se puede eliminar el proveedor",
+                            Map.of(
+                                    "razón", "El proveedor tiene productos asociados",
+                                    "solución", "Elimine o actualice primero los productos relacionados"
+                            )));
         }
 
         proveedorRepository.deleteById(id);
-
-        Map<String, Object> respuesta = new LinkedHashMap<>();
-        respuesta.put("status", "éxito");
-        respuesta.put("mensaje", "Proveedor eliminado correctamente");
-        respuesta.put("id_eliminado", id);
-        return ResponseEntity.ok(respuesta);
+        return ResponseEntity.ok(Map.of(
+                "status", "éxito",
+                "mensaje", "Proveedor eliminado correctamente",
+                "id_eliminado", id
+        ));
     }
 }
