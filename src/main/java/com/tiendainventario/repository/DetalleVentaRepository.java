@@ -1,0 +1,7 @@
+package com.tiendainventario.repository;
+
+import com.tiendainventario.model.DetalleVenta;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface DetalleVentaRepository extends JpaRepository<DetalleVenta, Long> {
+}

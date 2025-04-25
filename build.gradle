@@ -1,0 +1,54 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.4'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'io.freefair.lombok' version '8.6' // Mejora la integración de Lombok con Gradle
+}
+
+group = 'com.tiendainventario'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// Spring Boot Starters (esenciales)
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation' // Validación de datos
+
+	// H2 (solo para desarrollo)
+	runtimeOnly 'com.h2database:h2'
+
+	// Lombok (generación de código)
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// Testing
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher' // Soporte para pruebas en IDEs
+
+	// Opcionales (descomenta si necesitas)
+	// implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0' // Swagger/OpenAPI
+	// implementation 'org.springframework.boot:spring-boot-starter-security' // Spring Security
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
+}
