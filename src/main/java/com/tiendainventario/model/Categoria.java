@@ -3,7 +3,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
-//hola
+
 @Entity
 @Getter @Setter @NoArgsConstructor
 public class Categoria{
