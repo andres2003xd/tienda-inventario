@@ -1,11 +1,17 @@
 package com.tiendainventario.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)  // Excluir campos nulos
 public class Producto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,14 +20,19 @@ public class Producto {
     private String nombre;
 
     private String descripcion;
+
     private Double precio;
+
     private Integer stock;
+
     @ManyToOne
     @JoinColumn(name = "categoria_id")
+    @JsonProperty("categoria") // Personaliza el nombre del campo en JSON
     private Categoria categoria;
 
     @ManyToOne
     @JoinColumn(name = "proveedor_id")
+    @JsonProperty("proveedor") // Personaliza el nombre del campo en JSON
     private Proveedor proveedor;
 
     public Producto(Long id, String nombre, String descripcion, Double precio, Integer stock, Proveedor proveedor, Categoria categoria) {
@@ -33,64 +44,4 @@ public class Producto {
         this.proveedor = proveedor;
         this.categoria = categoria;
     }
-
-    //setters
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public void setPrecio(Double precio) {
-        this.precio = precio;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
-
-    public void setProveedor(Proveedor proveedor) {
-        this.proveedor = proveedor;
-    }
-
-    //getters
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public Double getPrecio() {
-        return precio;
-    }
-
-    public Integer getStock() {
-        return stock;
-    }
-
-    public Proveedor getProveedor() {
-        return proveedor;
-    }
-
-
 }
