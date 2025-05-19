@@ -6,7 +6,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 @Entity
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +23,7 @@ public class Cliente {
     private String email;
 
     @OneToMany(mappedBy = "cliente")
+    @JsonIgnore
     private List<Venta> ventas;
 
 
@@ -32,7 +36,7 @@ public class Cliente {
         this.email = email;
     }
 
-    //setters
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -48,8 +52,6 @@ public class Cliente {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    //getters
 
     public Long getId() {
         return id;

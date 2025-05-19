@@ -1,6 +1,7 @@
 package com.tiendainventario.controller;
 
 import com.tiendainventario.exception.CategoriaAlreadyExistsException;
+
 import com.tiendainventario.model.Categoria;
 import com.tiendainventario.service.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
