@@ -1,12 +1,12 @@
 package com.tiendainventario.service;
 
+import com.tiendainventario.exception.VentaNotFoundException;
 import com.tiendainventario.model.Venta;
-import com.tiendainventario.repository.ClienteRepository;
 import com.tiendainventario.repository.VentaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 public class VentaService {
@@ -14,33 +14,32 @@ public class VentaService {
     @Autowired
     private VentaRepository ventaRepository;
 
-    @Autowired
-    private ClienteRepository clienteRepository;
-
-    // Crear nueva venta
-    public Venta crearVenta(Map<String, Object> requestBody) {
-        // Lógica para crear una venta
-        return new Venta(); // Implementar la lógica aquí
-    }
-
-    // Listar todas las ventas
     public List<Venta> listarVentas() {
         return ventaRepository.findAll();
     }
 
-    // Obtener una venta por ID
-    public Optional<Venta> obtenerVentaPorId(Long id) {
-        return ventaRepository.findById(id);
+    public Venta buscarPorId(Long id) {
+        return ventaRepository.findById(id)
+                .orElseThrow(() -> new VentaNotFoundException("Venta no encontrada con ID: " + id));
     }
 
-    // Actualizar una venta
-    public Venta actualizarVenta(Long id, Map<String, Object> requestBody) {
-        // Lógica para actualizar una venta
-        return new Venta(); // Implementar la lógica aquí
+    public Venta crearVenta(Venta venta) {
+        return ventaRepository.save(venta);
     }
 
-    // Eliminar una venta por ID
+    public Venta actualizarVenta(Long id, Venta ventaActualizada) {
+        Venta venta = buscarPorId(id);
+
+        venta.setFecha(ventaActualizada.getFecha());
+        venta.setTotal(ventaActualizada.getTotal());
+        venta.setCliente(ventaActualizada.getCliente());
+        venta.setDetalles(ventaActualizada.getDetalles());
+
+        return ventaRepository.save(venta);
+    }
+
     public void eliminarVenta(Long id) {
-        ventaRepository.deleteById(id);
+        Venta venta = buscarPorId(id);
+        ventaRepository.delete(venta);
     }
 }
