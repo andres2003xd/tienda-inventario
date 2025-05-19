@@ -1,13 +1,13 @@
 package com.tiendainventario.service;
 
+import com.tiendainventario.exception.ProveedorAlreadyExistsException;
+import com.tiendainventario.exception.ProveedorNotFoundException;
 import com.tiendainventario.model.Proveedor;
 import com.tiendainventario.repository.ProveedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class ProveedorService {
@@ -15,30 +15,42 @@ public class ProveedorService {
     @Autowired
     private ProveedorRepository proveedorRepository;
 
-    // Crear un proveedor
-    public Proveedor crearProveedor(Map<String, Object> requestBody) {
-        // Lógica para crear proveedor
-        return new Proveedor(); // Implementar lógica de creación
-    }
-
-    // Listar todos los proveedores
     public List<Proveedor> listarProveedores() {
         return proveedorRepository.findAll();
     }
 
-    // Obtener proveedor por ID
-    public Optional<Proveedor> obtenerProveedorPorId(Long id) {
-        return proveedorRepository.findById(id);
+    public Proveedor buscarPorId(Long id) {
+        return proveedorRepository.findById(id)
+                .orElseThrow(() -> new ProveedorNotFoundException("Proveedor no encontrado con ID: " + id));
     }
 
-    // Actualizar un proveedor
-    public Proveedor actualizarProveedor(Long id, Map<String, Object> requestBody) {
-        // Lógica para actualizar proveedor
-        return new Proveedor(); // Implementar lógica de actualización
+    public Proveedor crearProveedor(Proveedor proveedor) {
+        if (proveedorRepository.existsByNombre(proveedor.getNombre())) {
+            throw new ProveedorAlreadyExistsException(
+                    "El proveedor con el nombre '" + proveedor.getNombre() + "' ya existe."
+            );
+        }
+        return proveedorRepository.save(proveedor);
     }
 
-    // Eliminar proveedor
+    public Proveedor actualizarProveedor(Long id, Proveedor proveedorActualizado) {
+        Proveedor proveedor = buscarPorId(id);
+
+        // Validamos si ya existe un proveedor con el mismo nombre (excepto el actual)
+        if (!proveedor.getId().equals(id) && proveedorRepository.existsByNombre(proveedorActualizado.getNombre())) {
+            throw new ProveedorAlreadyExistsException(
+                    "El nombre '" + proveedorActualizado.getNombre() + "' ya está en uso por otro proveedor."
+            );
+        }
+
+        proveedor.setNombre(proveedorActualizado.getNombre());
+        proveedor.setTelefono(proveedorActualizado.getTelefono());
+        proveedor.setEmail(proveedorActualizado.getEmail());
+        return proveedorRepository.save(proveedor);
+    }
+
     public void eliminarProveedor(Long id) {
-        proveedorRepository.deleteById(id);
+        Proveedor proveedor = buscarPorId(id);
+        proveedorRepository.delete(proveedor);
     }
 }
