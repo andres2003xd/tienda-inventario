@@ -10,12 +10,14 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+   @Column(nullable = false)
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)  
     private String nombre;
 
     private String descripcion;
