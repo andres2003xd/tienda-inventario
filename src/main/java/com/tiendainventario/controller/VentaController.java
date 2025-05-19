@@ -2,7 +2,6 @@ package com.tiendainventario.controller;
 
 import com.tiendainventario.model.Venta;
 import com.tiendainventario.service.VentaService;
-import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +15,12 @@ import java.util.Optional;
 public class VentaController {
 
     @Autowired
-    private VentaService ventaService;
+    private VentaService ventaService; // Ensure the "crearVenta(Map<String, Object>)" method is implemented in VentaService
 
     // Crear una nueva venta
     @PostMapping
     public ResponseEntity<?> crearVenta(@RequestBody Map<String, Object> requestBody) {
-        Venta nuevaVenta = ventaService.crearVenta(requestBody);
+        Venta nuevaVenta = ventaService.crearVenta(requestBody); // Ensure this method exists in VentaService
         return ResponseEntity.ok(nuevaVenta);
     }
 
