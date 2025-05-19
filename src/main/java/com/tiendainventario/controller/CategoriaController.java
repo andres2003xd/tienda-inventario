@@ -84,6 +84,7 @@ public class CategoriaController {
             );
         }
 
+       
         // Validaciones
         Map<String, String> errores = new LinkedHashMap<>();
         if (categoria.getNombre() == null || categoria.getNombre().trim().isEmpty()) {
