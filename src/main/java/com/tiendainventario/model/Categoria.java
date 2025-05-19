@@ -1,12 +1,16 @@
 package com.tiendainventario.model;
+
 import jakarta.persistence.*;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 @Entity
-@Getter @Setter @NoArgsConstructor
-public class Categoria{
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,8 +30,6 @@ public class Categoria{
         this.descripcion = descripcion;
     }
 
-
-    //setters
     public void setId(Long id) {
         this.id = id;
     }
@@ -37,8 +39,9 @@ public class Categoria{
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-
-    //getters
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
+    }
     public Long getId() {
         return id;
     }
@@ -47,5 +50,8 @@ public class Categoria{
     }
     public String getDescripcion() {
         return descripcion;
+    }
+    public List<Producto> getProductos() {
+        return productos;
     }
 }
