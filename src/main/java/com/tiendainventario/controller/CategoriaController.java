@@ -83,6 +83,8 @@ public class CategoriaController {
                             Collections.singletonMap("EJEMPLO: ", generarEjemploCategoria()))
             );
         }
+        
+        //hola
 
         // Validaciones
         Map<String, String> errores = new LinkedHashMap<>();
