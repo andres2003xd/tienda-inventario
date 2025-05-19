@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-//hola
 @RestController
 @RequestMapping("/api/categorias")
 public class CategoriaController {
@@ -84,6 +83,7 @@ public class CategoriaController {
             );
         }
 
+       
         // Validaciones
         Map<String, String> errores = new LinkedHashMap<>();
         if (categoria.getNombre() == null || categoria.getNombre().trim().isEmpty()) {
