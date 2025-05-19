@@ -1,5 +1,6 @@
 package com.tiendainventario.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -7,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Proveedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
