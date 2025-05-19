@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-
+//hola
 @RestController
 @RequestMapping("/api/categorias")
 public class CategoriaController {
