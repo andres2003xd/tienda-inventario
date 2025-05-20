@@ -40,4 +40,6 @@ public class DetalleVentaController {
         detalleVentaService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+
 }

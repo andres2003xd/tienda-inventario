@@ -18,9 +18,10 @@ public class Categoria {
     private Long id;
 
     @Column(nullable = false)
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String nombre;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String descripcion;
 
     @OneToMany(mappedBy = "categoria")

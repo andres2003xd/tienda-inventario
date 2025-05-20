@@ -1,5 +1,6 @@
 package com.tiendainventario.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,6 +15,7 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @Column(nullable = false)
     private String nombre;
 
@@ -24,12 +26,15 @@ public class Producto {
     private Integer stock;
 
     @ManyToOne
-    @JoinColumn(name = "categoria_id", nullable = false)
+    @JoinColumn(name = "categoria_id")
+    @JsonProperty("categoria")
     private Categoria categoria;
 
     @ManyToOne
-    @JoinColumn(name = "proveedor_id", nullable = false)
+    @JoinColumn(name = "proveedor_id")
+    @JsonProperty("proveedor")
     private Proveedor proveedor;
+
     public Producto(Long id, String nombre, String descripcion, Double precio, Integer stock, Categoria categoria, Proveedor proveedor) {
         this.id = id;
         this.nombre = nombre;

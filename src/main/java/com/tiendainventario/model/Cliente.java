@@ -2,6 +2,7 @@ package com.tiendainventario.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -16,10 +17,20 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String nombre;
-    private String direccion;
-    private String telefono;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String email;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String direccion;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String telefono;
+
+    public Cliente(Long id) {
+        this.id = id;
+    }
+
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "cliente")

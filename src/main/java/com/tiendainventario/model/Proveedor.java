@@ -15,9 +15,13 @@ public class Proveedor {
     private Long id;
 
     @Column(nullable = false)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String nombre;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String telefono;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String email;
 
     @OneToMany(mappedBy = "proveedor")
