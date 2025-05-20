@@ -1,10 +1,14 @@
 package com.tiendainventario.model;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+
 public class DetalleVenta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,4 +1,6 @@
 package com.tiendainventario.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -6,7 +8,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class Venta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,8 +25,10 @@ public class Venta {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "venta")
+    @JsonIgnore
     private List<DetalleVenta> detalles;
+
 
 
     public Venta(Long id, LocalDateTime fecha, Double total, Cliente cliente) {
