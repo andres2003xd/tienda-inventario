@@ -58,13 +58,6 @@ public class Venta {
         this.total = total;
     }
 
-    public Cliente getCliente() {
-        if (cliente != null && cliente.getId() != null) {
-            return new Cliente(cliente.getId());
-        }
-        return null;
-    }
-
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
