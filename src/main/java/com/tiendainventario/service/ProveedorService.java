@@ -1,55 +1,39 @@
 package com.tiendainventario.service;
 
-import com.tiendainventario.exception.ProveedorAlreadyExistsException;
-import com.tiendainventario.exception.ProveedorNotFoundException;
+import com.tiendainventario.exception.ResourceAlreadyExistsException;
 import com.tiendainventario.model.Proveedor;
 import com.tiendainventario.repository.ProveedorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class ProveedorService {
+public class ProveedorService extends BaseService<Proveedor, Long, ProveedorRepository> {
 
-    @Autowired
-    private ProveedorRepository proveedorRepository;
-
-    public List<Proveedor> listarProveedores() {
-        return proveedorRepository.findAll();
-    }
-
-    public Proveedor buscarPorId(Long id) {
-        return proveedorRepository.findById(id)
-                .orElseThrow(() -> new ProveedorNotFoundException("Proveedor no encontrado con ID: " + id));
+    public ProveedorService(ProveedorRepository repository) {
+        super(repository);
     }
 
     public Proveedor crearProveedor(Proveedor proveedor) {
-        if (proveedorRepository.existsByNombre(proveedor.getNombre())) {
-            throw new ProveedorAlreadyExistsException(
-                    "El proveedor con el nombre '" + proveedor.getNombre() + "' ya existe."
-            );
+        if (repository.existsByNombre(proveedor.getNombre())) {
+            throw new ResourceAlreadyExistsException("Proveedor", "nombre", proveedor.getNombre());
         }
-        return proveedorRepository.save(proveedor);
+        return repository.save(proveedor);
     }
 
     public Proveedor actualizarProveedor(Long id, Proveedor proveedorActualizado) {
-        Proveedor proveedor = buscarPorId(id);
+        Proveedor proveedor = findById(id);
 
-        if (!proveedor.getId().equals(id) && proveedorRepository.existsByNombre(proveedorActualizado.getNombre())) {
-            throw new ProveedorAlreadyExistsException(
-                    "El nombre '" + proveedorActualizado.getNombre() + "' ya está en uso por otro proveedor."
-            );
+        if (!proveedor.getId().equals(id) && repository.existsByNombre(proveedorActualizado.getNombre())) {
+            throw new ResourceAlreadyExistsException("Proveedor", "nombre", proveedorActualizado.getNombre());
         }
 
         proveedor.setNombre(proveedorActualizado.getNombre());
         proveedor.setTelefono(proveedorActualizado.getTelefono());
         proveedor.setEmail(proveedorActualizado.getEmail());
-        return proveedorRepository.save(proveedor);
+        return repository.save(proveedor);
     }
 
-    public void eliminarProveedor(Long id) {
-        Proveedor proveedor = buscarPorId(id);
-        proveedorRepository.delete(proveedor);
+    @Override
+    protected String getEntityName() {
+        return "Proveedor";
     }
 }

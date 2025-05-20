@@ -1,53 +1,35 @@
 package com.tiendainventario.service;
 
-import com.tiendainventario.exception.ClienteAlreadyExistsException;
-import com.tiendainventario.exception.ClienteNotFoundException;
+import com.tiendainventario.exception.ResourceAlreadyExistsException;
 import com.tiendainventario.model.Cliente;
 import com.tiendainventario.repository.ClienteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class ClienteService {
+public class ClienteService extends BaseService<Cliente, Long, ClienteRepository> {
 
-    @Autowired
-    private ClienteRepository clienteRepository;
-
-    public List<Cliente> listarClientes() {
-        return clienteRepository.findAll();
-    }
-
-    public Cliente buscarPorId(Long id) {
-        return clienteRepository.findById(id)
-                .orElseThrow(() -> new ClienteNotFoundException("Cliente no encontrado con ID: " + id));
+    public ClienteService(ClienteRepository repository) {
+        super(repository);
     }
 
     public Cliente crearCliente(Cliente cliente) {
-        if (clienteRepository.existsByEmail(cliente.getEmail())) {
-            throw new ClienteAlreadyExistsException("El cliente con el email '" + cliente.getEmail() + "' ya existe.");
+        if (repository.existsByEmail(cliente.getEmail())) {
+            throw new ResourceAlreadyExistsException("Cliente", "email", cliente.getEmail());
         }
-        return clienteRepository.save(cliente);
+        return repository.save(cliente);
     }
 
     public Cliente actualizarCliente(Long id, Cliente clienteActualizado) {
-        Cliente cliente = buscarPorId(id);
-
+        Cliente cliente = findById(id);
         cliente.setNombre(clienteActualizado.getNombre());
         cliente.setDireccion(clienteActualizado.getDireccion());
-        cliente.setTelefono(clienteActualizado.getTelefono());
         cliente.setEmail(clienteActualizado.getEmail());
-
-        if (!cliente.getId().equals(id) && clienteRepository.existsByEmail(clienteActualizado.getEmail())) {
-            throw new ClienteAlreadyExistsException("El email '" + clienteActualizado.getEmail() + "' ya está en uso.");
-        }
-
-        return clienteRepository.save(cliente);
+        cliente.setTelefono(clienteActualizado.getTelefono());
+        return repository.save(cliente);
     }
 
-    public void eliminarCliente(Long id) {
-        Cliente cliente = buscarPorId(id);
-        clienteRepository.delete(cliente);
+    @Override
+    protected String getEntityName() {
+        return "Cliente";
     }
 }

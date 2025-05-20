@@ -1,66 +1,48 @@
 package com.tiendainventario.service;
 
-
-import com.tiendainventario.exception.DetalleVentaNotFoundException;
+import com.tiendainventario.exception.ResourceNotFoundException;
 import com.tiendainventario.model.DetalleVenta;
 import com.tiendainventario.model.Producto;
 import com.tiendainventario.repository.DetalleVentaRepository;
 import com.tiendainventario.repository.ProductoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class DetalleVentaService {
+public class DetalleVentaService extends BaseService<DetalleVenta, Long, DetalleVentaRepository> {
 
-    @Autowired
-    private DetalleVentaRepository detalleVentaRepository;
-    @Autowired
-    private ProductoRepository productoRepository;
+    private final ProductoRepository productoRepository;
 
-
-    public List<DetalleVenta> listarDetallesVenta() {
-        return detalleVentaRepository.findAll();
+    public DetalleVentaService(DetalleVentaRepository repository, ProductoRepository productoRepository) {
+        super(repository);
+        this.productoRepository = productoRepository;
     }
-
-    public DetalleVenta buscarPorId(Long id) {
-        return detalleVentaRepository.findById(id)
-                .orElseThrow(() -> new DetalleVentaNotFoundException("Detalle de venta no encontrado con ID: " + id));
-    }
-
 
     public DetalleVenta crearDetalleVenta(DetalleVenta detalleVenta) {
-        // Verificar que exista un producto con el ID proporcionado
         Long productoId = detalleVenta.getProducto().getId();
         Producto producto = productoRepository.findById(productoId)
-                .orElseThrow(() -> new IllegalArgumentException("El producto con ID " + productoId + " no existe."));
+                .orElseThrow(() -> new ResourceNotFoundException("Producto", "ID", productoId));
 
-        // Validar si el producto tiene proveedor asociado
         if (producto.getProveedor() == null) {
             throw new IllegalArgumentException("El producto debe tener un proveedor asociado.");
         }
 
-        // Actualizar la referencia del producto en el detalle de venta
         detalleVenta.setProducto(producto);
-
-        // Persistir el detalle de venta
-        return detalleVentaRepository.save(detalleVenta);
+        return repository.save(detalleVenta);
     }
 
     public DetalleVenta actualizarDetalleVenta(Long id, DetalleVenta detalleActualizado) {
-        DetalleVenta detalleExistente = buscarPorId(id);
+        DetalleVenta detalleExistente = findById(id);
         detalleExistente.setCantidad(detalleActualizado.getCantidad());
         detalleExistente.setPrecioUnitario(detalleActualizado.getPrecioUnitario());
         detalleExistente.setSubtotal(detalleActualizado.getSubtotal());
         detalleExistente.setProducto(detalleActualizado.getProducto());
         detalleExistente.setVenta(detalleActualizado.getVenta());
-        
-        return detalleVentaRepository.save(detalleExistente);
+
+        return repository.save(detalleExistente);
     }
 
-    public void eliminarDetalleVenta(Long id) {
-        DetalleVenta detalle = buscarPorId(id);
-        detalleVentaRepository.delete(detalle);
+    @Override
+    protected String getEntityName() {
+        return "DetalleVenta";
     }
 }

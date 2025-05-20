@@ -1,50 +1,57 @@
 package com.tiendainventario.service;
 
-import com.tiendainventario.exception.CategoriaAlreadyExistsException;
-import com.tiendainventario.exception.CategoriaNotFoundException;
+import com.tiendainventario.exception.ResourceAlreadyExistsException;
+import com.tiendainventario.exception.ResourceNotFoundException;
 import com.tiendainventario.model.Categoria;
 import com.tiendainventario.repository.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CategoriaService {
+public class CategoriaService extends BaseService<Categoria, Long, CategoriaRepository> {
 
     @Autowired
-    private CategoriaRepository categoriaRepository;
-
-    public List<Categoria> listarCategorias() {
-        return categoriaRepository.findAll();
+    public CategoriaService(CategoriaRepository repository) {
+        super(repository);
     }
 
-    public Categoria buscarPorId(Long id) {
-        return categoriaRepository.findById(id)
-                .orElseThrow(() -> new CategoriaNotFoundException("Categoría no encontrada con ID: " + id));
+    @Override
+    protected String getEntityName() {
+        return "Categoría";
     }
-    public Categoria crearCategoria(Categoria categoria) {
-        if (categoriaRepository.existsByNombre(categoria.getNombre())) {
-            throw new CategoriaAlreadyExistsException("La categoría con el nombre '" + categoria.getNombre() + "' ya existe.");
+
+    @Transactional
+    public Categoria create(Categoria categoria) {
+        // Validar unicidad del nombre
+        if (repository.existsByNombre(categoria.getNombre())) {
+            throw new ResourceAlreadyExistsException(
+                    getEntityName(),
+                    "nombre",
+                    categoria.getNombre()
+            );
         }
-        return categoriaRepository.save(categoria);
+        return repository.save(categoria);
     }
 
-    public Categoria actualizarCategoria(Long id, Categoria categoriaActualizada) {
-        Categoria categoria = buscarPorId(id);
-        categoria.setNombre(categoriaActualizada.getNombre());
-        categoria.setDescripcion(categoriaActualizada.getDescripcion());
+    @Transactional
+    public Categoria update(Long id, Categoria categoriaDetails) {
+        Categoria categoria = findById(id); // Usa el método heredado
 
-
-        if (!categoria.getId().equals(id) && categoriaRepository.existsByNombre(categoriaActualizada.getNombre())) {
-            throw new CategoriaAlreadyExistsException("El nombre '" + categoriaActualizada.getNombre() + "' ya está en uso.");
+        // Validar cambio de nombre
+        if (!categoria.getNombre().equals(categoriaDetails.getNombre()) &&
+                repository.existsByNombre(categoriaDetails.getNombre())) {
+            throw new ResourceAlreadyExistsException(
+                    getEntityName(),
+                    "nombre",
+                    categoriaDetails.getNombre()
+            );
         }
 
-        return categoriaRepository.save(categoria);
-    }
+        // Actualizar campos
+        categoria.setNombre(categoriaDetails.getNombre());
+        categoria.setDescripcion(categoriaDetails.getDescripcion());
 
-    public void eliminarCategoria(Long id) {
-        Categoria categoria = buscarPorId(id);
-        categoriaRepository.delete(categoria);
+        return repository.save(categoria);
     }
 }

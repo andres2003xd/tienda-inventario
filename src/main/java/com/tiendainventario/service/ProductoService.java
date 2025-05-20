@@ -1,53 +1,36 @@
 package com.tiendainventario.service;
 
-import com.tiendainventario.exception.ProductoAlreadyExistsException;
-import com.tiendainventario.exception.ProductoNotFoundException;
 import com.tiendainventario.model.Producto;
 import com.tiendainventario.repository.ProductoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ProductoService {
+public class ProductoService extends BaseService<Producto, Long, ProductoRepository> {
 
-    @Autowired
-    private ProductoRepository productoRepository;
-
-    public List<Producto> listarProductos() {
-        return productoRepository.findAll();
+    public ProductoService(ProductoRepository repository) {
+        super(repository);
     }
 
-    public Producto buscarPorId(Long id) {
-        return productoRepository.findById(id)
-                .orElseThrow(() -> new ProductoNotFoundException("Producto no encontrado con ID: " + id));
-    }
-
+    @Transactional
     public Producto crearProducto(Producto producto) {
-        if (productoRepository.existsByProveedorId(producto.getProveedor().getId()) &&
-            productoRepository.existsByCategoriaId(producto.getCategoria().getId())) {
-            throw new ProductoAlreadyExistsException(
-                "El producto con la misma categoría y proveedor ya existe."
-            );
-        }
-        return productoRepository.save(producto);
+        return repository.save(producto);
     }
 
+    @Transactional
     public Producto actualizarProducto(Long id, Producto productoActualizado) {
-        Producto producto = buscarPorId(id);
+        Producto producto = findById(id);
         producto.setNombre(productoActualizado.getNombre());
         producto.setDescripcion(productoActualizado.getDescripcion());
         producto.setPrecio(productoActualizado.getPrecio());
         producto.setStock(productoActualizado.getStock());
         producto.setCategoria(productoActualizado.getCategoria());
         producto.setProveedor(productoActualizado.getProveedor());
-
-        return productoRepository.save(producto);
+        return repository.save(producto);
     }
 
-    public void eliminarProducto(Long id) {
-        Producto producto = buscarPorId(id);
-        productoRepository.delete(producto);
+    @Override
+    protected String getEntityName() {
+        return "Producto";
     }
 }

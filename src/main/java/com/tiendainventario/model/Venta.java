@@ -1,34 +1,31 @@
 package com.tiendainventario.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@JsonPropertyOrder({ "id", "fecha", "total", "cliente" })
+@NoArgsConstructor
 public class Venta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private LocalDateTime fecha;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Double total;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id")
+    @JoinColumn(name = "cliente_id", nullable = false)
+    @JsonProperty("cliente")
     private Cliente cliente;
-
-    @OneToMany(mappedBy = "venta")
-    @JsonIgnore
-    private List<DetalleVenta> detalles;
-
-    public Venta() {}
 
     public Venta(Long id, LocalDateTime fecha, Double total, Cliente cliente) {
         this.id = id;
@@ -62,18 +59,13 @@ public class Venta {
     }
 
     public Cliente getCliente() {
-        return cliente;
+        if (cliente != null && cliente.getId() != null) {
+            return new Cliente(cliente.getId());
+        }
+        return null;
     }
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
-    }
-
-    public List<DetalleVenta> getDetalles() {
-        return detalles;
-    }
-
-    public void setDetalles(List<DetalleVenta> detalles) {
-        this.detalles = detalles;
     }
 }
