@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,55 +21,87 @@ public class VentaController {
     @Autowired
     private VentaService ventaService;
 
-    /**
-     * Método para crear una venta a partir del JSON reducido
-     */
     @PostMapping
     public ResponseEntity<?> crearVenta(@RequestBody Map<String, Object> requestBody) {
         try {
-            // 1. Extraer los datos del cuerpo de la solicitud JSON
-            String fecha = (String) requestBody.get("fecha");
-            Double total = Double.valueOf(requestBody.get("total").toString());
-            Map<String, Object> clienteData = (Map<String, Object>) requestBody.get("cliente");
-            Long clienteId = Long.valueOf(clienteData.get("id").toString());
+            // Validar y extraer fecha
+            Object fechaObject = requestBody.get("fecha");
+            if (fechaObject == null || !(fechaObject instanceof String)) {
+                throw new IllegalArgumentException("La fecha es obligatoria y debe estar en formato de texto.");
+            }
+            String fecha = (String) fechaObject;
 
-            // 2. Obtener el cliente por su ID y crear una nueva venta
+            // Validar y extraer total
+            Object totalObject = requestBody.get("total");
+            if (totalObject == null) {
+                throw new IllegalArgumentException("El total es obligatorio.");
+            }
+            Double total;
+            try {
+                total = Double.valueOf(totalObject.toString());
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("El valor 'total' debe ser numérico.");
+            }
+
+            // Validar "cliente" como un mapa
+            Object clienteObject = requestBody.get("cliente");
+            if (!(clienteObject instanceof Map)) {
+                throw new IllegalArgumentException("El cliente debe estar en formato JSON válido.");
+            }
+            @SuppressWarnings("unchecked")
+            Map<String, Object> clienteData = (Map<String, Object>) clienteObject;
+
+            // Validar que "ID" del cliente exista y sea válido
+            Object idObject = clienteData.get("id");
+            if (idObject == null) {
+                throw new IllegalArgumentException("El cliente debe contener un ID válido.");
+            }
+            Long clienteId;
+            try {
+                clienteId = Long.valueOf(idObject.toString());
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("El ID del cliente debe ser un número.");
+            }
+
+            // Buscar cliente
             Cliente cliente = ventaService.obtenerClientePorId(clienteId);
-            Venta venta = new Venta();
-            venta.setFecha(LocalDateTime.parse(fecha)); // Convertir la fecha recibida como texto
-            venta.setTotal(total); // Setear el total recibido
-            venta.setCliente(cliente); // Asociar la venta al cliente
+            if (cliente == null) {
+                throw new IllegalArgumentException("No se encontró un cliente con el ID proporcionado.");
+            }
 
-            // 3. Guardar la venta usando el servicio
+            // Crear y configurar nueva venta
+            Venta venta = new Venta();
+            venta.setFecha(LocalDateTime.parse(fecha));
+            venta.setTotal(total);
+            venta.setCliente(cliente);
+
+            // Guardar la venta usando el servicio
             Venta nuevaVenta = ventaService.crearVenta(venta);
 
-            // 4. Construir la respuesta con el formato deseado
-            Map<String, Object> respuesta = new HashMap<>();
+            // Construir la respuesta ordenada y en formato JSON
+            Map<String, Object> respuesta = new LinkedHashMap<>();
             respuesta.put("id", nuevaVenta.getId());
             respuesta.put("fecha", nuevaVenta.getFecha());
             respuesta.put("total", nuevaVenta.getTotal());
-            Map<String, Object> clienteResponse = new HashMap<>();
+            Map<String, Object> clienteResponse = new LinkedHashMap<>();
             clienteResponse.put("id", nuevaVenta.getCliente().getId());
             respuesta.put("cliente", clienteResponse);
 
-            // Enviar respuesta
             return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Error al procesar la solicitud."));
         }
     }
 
-    /**
-     * Método para listar todas las ventas
-     */
     @GetMapping
     public ResponseEntity<List<Venta>> listarVentas() {
         return ResponseEntity.ok(ventaService.listarVentas());
     }
 
-    /**
-     * Método para obtener una venta por su ID
-     */
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerVenta(@PathVariable Long id) {
         try {
@@ -79,9 +112,6 @@ public class VentaController {
         }
     }
 
-    /**
-     * Método para actualizar una venta
-     */
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarVenta(@PathVariable Long id, @RequestBody Venta venta) {
         try {
@@ -92,9 +122,6 @@ public class VentaController {
         }
     }
 
-    /**
-     * Método para eliminar una venta
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarVenta(@PathVariable Long id) {
         try {
@@ -105,9 +132,6 @@ public class VentaController {
         }
     }
 
-    /**
-     * Construir respuesta de error para API
-     */
     private Map<String, Object> crearRespuestaError(String mensaje, Object detalles) {
         Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("mensaje", mensaje);

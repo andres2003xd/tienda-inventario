@@ -1,6 +1,6 @@
 package com.tiendainventario.service;
 
-import com.tiendainventario.exception.DetalleVentaAlreadyExistsException;
+
 import com.tiendainventario.exception.DetalleVentaNotFoundException;
 import com.tiendainventario.model.DetalleVenta;
 import com.tiendainventario.model.Producto;

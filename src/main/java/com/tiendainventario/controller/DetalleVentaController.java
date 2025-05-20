@@ -1,9 +1,7 @@
 package com.tiendainventario.controller;
 
-import com.tiendainventario.exception.DetalleVentaAlreadyExistsException;
+
 import com.tiendainventario.model.DetalleVenta;
-import com.tiendainventario.model.Producto;
-import com.tiendainventario.model.Venta;
 import com.tiendainventario.service.DetalleVentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,11 +30,18 @@ public class DetalleVentaController {
     @PostMapping
     public ResponseEntity<?> crearDetalleVenta(@RequestBody DetalleVenta detalleVenta) {
         try {
-            DetalleVenta nuevoDetalle = detalleVentaService.crearDetalleVenta(detalleVenta);
-            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoDetalle);
+            // Crear el detalle de venta en el servicio
+            DetalleVenta nuevoDetalleVenta = detalleVentaService.crearDetalleVenta(detalleVenta);
+
+            // Devolver la respuesta reducida
+            Map<String, Object> respuesta = mapearDetalleVenta(nuevoDetalleVenta);
+            return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("mensaje", e.getMessage()));
+            // Errores de validación del negocio
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            // Otros errores
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Error al crear el detalle de venta."));
         }
     }
 
@@ -47,10 +53,14 @@ public class DetalleVentaController {
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerDetalleVenta(@PathVariable Long id) {
         try {
+
             DetalleVenta detalleVenta = detalleVentaService.buscarPorId(id);
-            return ResponseEntity.ok(mapearDetalleVenta(detalleVenta));
-        } catch (Exception ex) {
-            return new ResponseEntity<>(crearRespuestaError(ex.getMessage(), "ID: " + id), HttpStatus.NOT_FOUND);
+
+
+            Map<String, Object> respuesta = mapearDetalleVenta(detalleVenta);
+            return new ResponseEntity<>(respuesta, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -64,6 +74,7 @@ public class DetalleVentaController {
         }
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarDetalleVenta(@PathVariable Long id) {
         try {
@@ -73,41 +84,31 @@ public class DetalleVentaController {
             return new ResponseEntity<>(crearRespuestaError(ex.getMessage(), "ID: " + id), HttpStatus.NOT_FOUND);
         }
     }
-    // Mapeo manual para controlar la salida JSON
+
     private Map<String, Object> mapearDetalleVenta(DetalleVenta detalleVenta) {
-        Map<String, Object> respuesta = new HashMap<>();
+        Map<String, Object> detalleVentaMap = new LinkedHashMap<>();
 
-        respuesta.put("id", detalleVenta.getId());
-        respuesta.put("cantidad", detalleVenta.getCantidad());
-        respuesta.put("precioUnitario", detalleVenta.getPrecioUnitario());
-        respuesta.put("subtotal", detalleVenta.getSubtotal());
+        // Información básica del DetalleVenta
+        detalleVentaMap.put("id", detalleVenta.getId());
+        detalleVentaMap.put("cantidad", detalleVenta.getCantidad());
+        detalleVentaMap.put("precioUnitario", detalleVenta.getPrecioUnitario());
+        detalleVentaMap.put("subtotal", detalleVenta.getSubtotal());
 
-        // Mapeo del producto
-        Producto producto = detalleVenta.getProducto();
-        if (producto != null) {
-            Map<String, Object> productoMap = new HashMap<>();
-            productoMap.put("id", producto.getId());
-            productoMap.put("nombre", producto.getNombre());
-            productoMap.put("descripcion", producto.getDescripcion());
-
-            // Verificar si el proveedor no es null
-            if (producto.getProveedor() != null) {
-                productoMap.put("proveedor", producto.getProveedor() != null ? producto.getProveedor().getId() : null);
-            }
-            respuesta.put("producto", productoMap);
+        // Solo mostrar ID del Producto
+        if (detalleVenta.getProducto() != null) {
+            Map<String, Object> productoMap = new LinkedHashMap<>();
+            productoMap.put("id", detalleVenta.getProducto().getId());
+            detalleVentaMap.put("producto", productoMap);
         }
 
-        // Mapeo de la venta
-        Venta venta = detalleVenta.getVenta();
-        if (venta != null) {
-            Map<String, Object> ventaMap = new HashMap<>();
-            ventaMap.put("id", venta.getId());
-            ventaMap.put("fecha", venta.getFecha());
-            ventaMap.put("total", venta.getTotal());
-            respuesta.put("venta", ventaMap);
+        // Solo mostrar ID de la Venta
+        if (detalleVenta.getVenta() != null) {
+            Map<String, Object> ventaMap = new LinkedHashMap<>();
+            ventaMap.put("id", detalleVenta.getVenta().getId());
+            detalleVentaMap.put("venta", ventaMap);
         }
 
-        return respuesta;
+        return detalleVentaMap;
     }
     }
 

@@ -15,11 +15,9 @@ public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-
     public List<Cliente> listarClientes() {
         return clienteRepository.findAll();
     }
-
 
     public Cliente buscarPorId(Long id) {
         return clienteRepository.findById(id)
@@ -33,7 +31,6 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
-
     public Cliente actualizarCliente(Long id, Cliente clienteActualizado) {
         Cliente cliente = buscarPorId(id);
 
@@ -42,14 +39,12 @@ public class ClienteService {
         cliente.setTelefono(clienteActualizado.getTelefono());
         cliente.setEmail(clienteActualizado.getEmail());
 
-
         if (!cliente.getId().equals(id) && clienteRepository.existsByEmail(clienteActualizado.getEmail())) {
             throw new ClienteAlreadyExistsException("El email '" + clienteActualizado.getEmail() + "' ya está en uso.");
         }
 
         return clienteRepository.save(cliente);
     }
-
 
     public void eliminarCliente(Long id) {
         Cliente cliente = buscarPorId(id);

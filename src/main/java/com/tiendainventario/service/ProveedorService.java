@@ -36,7 +36,6 @@ public class ProveedorService {
     public Proveedor actualizarProveedor(Long id, Proveedor proveedorActualizado) {
         Proveedor proveedor = buscarPorId(id);
 
-        // Validamos si ya existe un proveedor con el mismo nombre (excepto el actual)
         if (!proveedor.getId().equals(id) && proveedorRepository.existsByNombre(proveedorActualizado.getNombre())) {
             throw new ProveedorAlreadyExistsException(
                     "El nombre '" + proveedorActualizado.getNombre() + "' ya está en uso por otro proveedor."

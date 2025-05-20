@@ -49,4 +49,61 @@ public class Producto {
         this.proveedor = proveedor;
         this.categoria = categoria;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    public void setProveedor(Proveedor proveedor) {
+        this.proveedor = proveedor;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public void setPrecio(Double precio) {
+        this.precio = precio;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public Double getPrecio() {
+        return precio;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public Proveedor getProveedor() {
+        return proveedor;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
 }
