@@ -14,9 +14,11 @@ public class Proveedor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @Column(nullable = false)
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String nombre;
+
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String telefono;
@@ -24,8 +26,8 @@ public class Proveedor {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String email;
 
-    @OneToMany(mappedBy = "proveedor")
     @JsonIgnore
+    @OneToMany(mappedBy = "proveedor")
     private List<Producto> productos;
 
     public Proveedor(Long id, String nombre, String telefono, String email) {
@@ -67,11 +69,4 @@ public class Proveedor {
         this.email = email;
     }
 
-    public List<Producto> getProductos() {
-        return productos;
-    }
-
-    public void setProductos(List<Producto> productos) {
-        this.productos = productos;
-    }
 }

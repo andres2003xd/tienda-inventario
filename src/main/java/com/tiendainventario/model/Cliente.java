@@ -26,12 +26,6 @@ public class Cliente {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String telefono;
 
-    public Cliente(Long id) {
-        this.id = id;
-    }
-
-
-
     @JsonIgnore
     @OneToMany(mappedBy = "cliente")
     private List<Venta> ventas;
@@ -84,11 +78,4 @@ public class Cliente {
         this.email = email;
     }
 
-    public List<Venta> getVentas() {
-        return ventas;
-    }
-
-    public void setVentas(List<Venta> ventas) {
-        this.ventas = ventas;
-    }
 }

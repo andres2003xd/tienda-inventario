@@ -24,8 +24,8 @@ public class Categoria {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String descripcion;
 
-    @OneToMany(mappedBy = "categoria")
     @JsonIgnore
+    @OneToMany(mappedBy = "categoria")
     private List<Producto> productos;
 
     public Categoria(Long id, String nombre, String descripcion) {

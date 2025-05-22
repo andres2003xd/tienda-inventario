@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
             this.timestamp = timestamp;
         }
 
-        // Getters
+
         public int getStatus() { return status; }
         public String getMessage() { return message; }
         public LocalDateTime getTimestamp() { return timestamp; }
