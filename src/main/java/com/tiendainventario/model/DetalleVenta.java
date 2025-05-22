@@ -1,6 +1,5 @@
 package com.tiendainventario.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -13,21 +12,22 @@ public class DetalleVenta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
     private Integer cantidad;
+
     private Double precioUnitario;
+
     private Double subtotal;
 
     @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
-    @JsonIgnoreProperties({"nombre", "descripcion", "precio", "stock", "categoria", "proveedor"})
     @JsonProperty("producto")
     private Producto producto;
 
     @ManyToOne
     @JoinColumn(name = "venta_id", nullable = false)
-    @JsonIgnoreProperties({"fecha", "total", "cliente"})
     @JsonProperty("venta")
     private Venta venta;
 
