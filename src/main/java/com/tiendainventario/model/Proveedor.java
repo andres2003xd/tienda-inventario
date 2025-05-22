@@ -1,6 +1,7 @@
 package com.tiendainventario.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,16 +15,11 @@ public class Proveedor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Column(nullable = false)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String nombre;
 
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String telefono;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String email;
 
     @JsonIgnore

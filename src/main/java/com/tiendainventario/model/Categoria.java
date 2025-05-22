@@ -18,10 +18,7 @@ public class Categoria {
     private Long id;
 
     @Column(nullable = false)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String nombre;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String descripcion;
 
     @JsonIgnore
@@ -56,13 +53,5 @@ public class Categoria {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    public List<Producto> getProductos() {
-        return productos;
-    }
-
-    public void setProductos(List<Producto> productos) {
-        this.productos = productos;
     }
 }

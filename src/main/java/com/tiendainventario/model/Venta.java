@@ -1,8 +1,6 @@
 package com.tiendainventario.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -16,10 +14,8 @@ public class Venta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private LocalDateTime fecha;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Double total;
 
     @ManyToOne
