@@ -21,4 +21,5 @@ public class Rol {
     @ManyToOne
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
+
 }

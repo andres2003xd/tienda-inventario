@@ -37,4 +37,5 @@ public class Empleado {
 
     @OneToMany(mappedBy = "empleado")
     private List<Rol> roles;
+
 }
