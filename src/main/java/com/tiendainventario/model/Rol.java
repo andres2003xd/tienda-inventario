@@ -8,17 +8,17 @@ import lombok.*;
 public class Rol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_ROL")
+    @Column(name = "id_rol")
     private Long id;
 
     @Column(length = 255)
-    private String description;
+    private String descripcion;
 
     @ManyToOne
-    @JoinColumn(name = "ID_EMPLEADO")
+    @JoinColumn(name = "id_empleado")
     private Empleado empleado;
 
     @ManyToOne
-    @JoinColumn(name = "ID_CLIENTE")
+    @JoinColumn(name = "id_cliente")
     private Cliente cliente;
 }

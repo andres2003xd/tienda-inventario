@@ -12,7 +12,7 @@ import java.util.List;
 public class Descuento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_DESCUENTO")
+    @Column(name = "id_descuento")
     private Long id;
 
     @Column(nullable = false, length = 100)
@@ -21,10 +21,10 @@ public class Descuento {
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal porcentaje;
 
-    @Column(name = "FECHA_INICIO", nullable = false)
+    @Column(name = "fecha_inicio", nullable = false)
     private LocalDate fechaInicio;
 
-    @Column(name = "FECHA_FIN", nullable = false)
+    @Column(name = "fecha_fin", nullable = false)
     private LocalDate fechaFin;
 
     private Boolean activo = true;

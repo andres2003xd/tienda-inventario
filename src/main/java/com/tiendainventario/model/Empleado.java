@@ -10,11 +10,11 @@ import java.util.List;
 public class Empleado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_EMPLEADO")
+    @Column(name = "id_empleado")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "ID_CARGO", nullable = false)
+    @JoinColumn(name = "id_cargo", nullable = false)
     private CargoEmpleado cargo;
 
     @Column(nullable = false, length = 100)
@@ -32,7 +32,7 @@ public class Empleado {
     @Column(length = 100)
     private String email;
 
-    @Column(name = "FECHA_CONTRATACION", nullable = false)
+    @Column(name = "fecha_contratacion", nullable = false)
     private LocalDate fechaContratacion;
 
     @OneToMany(mappedBy = "empleado")

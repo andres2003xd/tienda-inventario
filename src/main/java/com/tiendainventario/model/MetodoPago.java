@@ -9,7 +9,7 @@ import java.util.List;
 public class MetodoPago {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_METODO_PAGO")
+    @Column(name = "id_metodo_pago")
     private Long id;
 
     @Column(nullable = false, length = 50)

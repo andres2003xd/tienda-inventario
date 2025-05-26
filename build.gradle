@@ -29,6 +29,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // Validación de datos
+	implementation 'org.flywaydb:flyway-core'
 
 	// H2 (solo para desarrollo)
 	runtimeOnly 'com.h2database:h2'

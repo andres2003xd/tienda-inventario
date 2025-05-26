@@ -9,7 +9,7 @@ import java.util.List;
 public class Marca {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_MARCA")
+    @Column(name = "id_marca")
     private Long id;
 
     @Column(nullable = false, length = 100)
@@ -18,7 +18,7 @@ public class Marca {
     @Column(length = 255)
     private String descripcion;
 
-    @Column(name = "FECHA_CREACION")
+    @Column(name = "fecha_creacion", nullable = false)
     private java.sql.Timestamp fechaCreacion;
 
     @OneToMany(mappedBy = "marca")

@@ -9,20 +9,19 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "cargo_empleado")  // Asegúrate que coincida con el nombre en la BD
 public class CargoEmpleado {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_cargo")
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String nombre;
 
-    @Column(length = 255)
     private String descripcion;
 
-    @Column(nullable = false)
+    @Column(name = "salario_base", nullable = false)
     private Double salarioBase;
 
     @OneToMany(mappedBy = "cargo")

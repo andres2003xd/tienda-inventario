@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_USUARIO")
+    @Column(name = "id_usuario")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "ID_ROL")
+    @JoinColumn(name = "id_rol", nullable = false)
     private Rol rol;
 
     @Column(nullable = false, unique = true, length = 50)
@@ -27,6 +27,6 @@ public class Usuario {
 
     private Boolean activo = true;
 
-    @Column(name = "FECHA_CREACION")
+    @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
 }
