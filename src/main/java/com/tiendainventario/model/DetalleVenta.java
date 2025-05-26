@@ -12,7 +12,7 @@ public class DetalleVenta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
+    @Column(name = "id_detalle_venta")
     private Long id;
 
     private Integer cantidad;
@@ -22,12 +22,12 @@ public class DetalleVenta {
     private Double subtotal;
 
     @ManyToOne
-    @JoinColumn(name = "producto_id", nullable = false)
+    @JoinColumn(name = "id_producto", nullable = false)
     @JsonProperty("producto")
     private Producto producto;
 
     @ManyToOne
-    @JoinColumn(name = "venta_id", nullable = false)
+    @JoinColumn(name = "id_venta", nullable = false)
     @JsonProperty("venta")
     private Venta venta;
 

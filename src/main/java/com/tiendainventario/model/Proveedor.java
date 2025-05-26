@@ -1,7 +1,6 @@
 package com.tiendainventario.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,6 +12,7 @@ import java.util.List;
 public class Proveedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_proveedor")
     private Long id;
 
     @Column(nullable = false)

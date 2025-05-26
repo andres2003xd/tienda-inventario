@@ -15,6 +15,7 @@ import java.util.List;
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_cliente")
     private Long id;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -29,6 +30,9 @@ public class Cliente {
     @JsonIgnore
     @OneToMany(mappedBy = "cliente")
     private List<Venta> ventas;
+
+    @OneToMany(mappedBy = "cliente")
+    private List<Rol> roles;
 
     public Cliente(String nombre, String direccion, String telefono, String email) {
         this.nombre = nombre;

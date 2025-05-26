@@ -15,6 +15,7 @@ import java.util.List;
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_categoria")
     private Long id;
 
     @Column(nullable = false)
@@ -36,7 +37,7 @@ public class Categoria {
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.id= id;
     }
 
     public String getNombre() {

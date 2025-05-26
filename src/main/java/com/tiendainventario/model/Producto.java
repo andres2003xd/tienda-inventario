@@ -13,6 +13,7 @@ public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_producto")
     private Long id;
 
     @Column(nullable = false)
@@ -25,16 +26,28 @@ public class Producto {
     private Integer stock;
 
     @ManyToOne
-    @JoinColumn(name = "categoria_id")
+    @JoinColumn(name = "id_categoria")
     @JsonProperty("categoria")
     private Categoria categoria;
 
+
     @ManyToOne
-    @JoinColumn(name = "proveedor_id")
+    @JoinColumn(name = "id_proveedor")
     @JsonProperty("proveedor")
     private Proveedor proveedor;
 
-    public Producto(Long id, String nombre, String descripcion, Double precio, Integer stock, Categoria categoria, Proveedor proveedor) {
+    @ManyToOne
+    @JoinColumn(name = "id_marca")
+    @JsonProperty("marca")
+    private Marca marca;
+
+    @ManyToOne
+    @JoinColumn(name = "id_descuento")
+    @JsonProperty("descuento")
+    private Descuento descuento;
+
+    public Producto(Long id, String nombre, String descripcion, Double precio, Integer stock,
+                    Categoria categoria, Proveedor proveedor, Marca marca, Descuento descuento) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -42,6 +55,21 @@ public class Producto {
         this.stock = stock;
         this.categoria = categoria;
         this.proveedor = proveedor;
+        this.marca = marca;
+        this.descuento = descuento;
+    }
+
+    public Descuento getDescuento() {
+        return descuento;
+    }
+    public void setDescuento(Descuento descuento) {
+        this.descuento = descuento;
+    }
+    public Marca getMarca() {
+        return marca;
+    }
+    public void setMarca(Marca marca) {
+        this.marca = marca;
     }
 
     public Long getId() {

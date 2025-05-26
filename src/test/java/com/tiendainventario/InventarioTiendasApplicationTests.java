@@ -9,5 +9,4 @@ class InventarioTiendasApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
