@@ -127,4 +127,5 @@ public class Producto {
     public void setStock(Integer stock) {
         this.stock = stock;
     }
+
 }

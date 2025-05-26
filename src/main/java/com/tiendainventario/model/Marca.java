@@ -23,4 +23,5 @@ public class Marca {
 
     @OneToMany(mappedBy = "marca")
     private List<Producto> productos;
+
 }

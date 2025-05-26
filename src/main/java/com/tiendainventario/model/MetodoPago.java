@@ -20,4 +20,6 @@ public class MetodoPago {
 
     @OneToMany(mappedBy = "metodoPago")
     private List<Venta> ventas;
+
+
 }

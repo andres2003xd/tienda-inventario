@@ -41,7 +41,6 @@ public class Cliente {
         this.email = email;
     }
 
-
     public Long getId() {
         return id;
     }
