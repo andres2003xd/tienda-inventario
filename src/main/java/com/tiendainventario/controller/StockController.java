@@ -1,7 +1,6 @@
 package com.tiendainventario.controller;
 
 import com.tiendainventario.model.Stock;
-import com.tiendainventario.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,4 +54,5 @@ public class StockController {
         stockService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
 }

@@ -40,4 +40,5 @@ public class RolController {
         rolService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
 }

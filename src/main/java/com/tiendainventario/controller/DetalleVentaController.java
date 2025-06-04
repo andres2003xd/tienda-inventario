@@ -79,4 +79,5 @@ public class DetalleVentaController {
         response.put("venta", detalleVenta.getVenta());
         return response;
     }
+
 }

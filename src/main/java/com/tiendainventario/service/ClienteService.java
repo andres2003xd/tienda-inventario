@@ -28,6 +28,7 @@ public class ClienteService extends BaseService<Cliente, Long, ClienteRepository
         return repository.save(cliente);
     }
 
+
     @Override
     protected String getEntityName() {
         return "Cliente";

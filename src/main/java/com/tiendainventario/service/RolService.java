@@ -30,4 +30,5 @@ public class RolService extends BaseService<Rol, Long, RolRepository> {
     protected String getEntityName() {
         return "Rol";
     }
+
 }

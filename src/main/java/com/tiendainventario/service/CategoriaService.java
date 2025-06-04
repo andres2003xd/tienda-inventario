@@ -53,4 +53,5 @@ public class CategoriaService extends BaseService<Categoria, Long, CategoriaRepo
 
         return repository.save(categoria);
     }
+
 }

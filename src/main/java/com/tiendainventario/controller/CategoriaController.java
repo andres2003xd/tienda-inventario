@@ -50,4 +50,5 @@ public class CategoriaController {
         categoriaService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
 }

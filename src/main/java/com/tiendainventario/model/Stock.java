@@ -31,4 +31,5 @@ public class Stock {
     @Column(name = "stock_maximo", nullable = false)
     private Integer stockMaximo;
 
+
 }

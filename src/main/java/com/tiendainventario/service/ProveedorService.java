@@ -36,4 +36,5 @@ public class ProveedorService extends BaseService<Proveedor, Long, ProveedorRepo
     protected String getEntityName() {
         return "Proveedor";
     }
+
 }
