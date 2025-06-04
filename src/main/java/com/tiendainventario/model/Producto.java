@@ -1,5 +1,6 @@
 package com.tiendainventario.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,7 +25,6 @@ public class Producto {
     private Double precio;
 
 
-
     @ManyToOne
     @JoinColumn(name = "id_categoria")
     @JsonProperty("categoria")
@@ -46,13 +46,16 @@ public class Producto {
     @JsonProperty("descuento")
     private Descuento descuento;
 
-    public Producto(Long id, String nombre, String descripcion, Double precio,
+    @OneToOne(mappedBy = "producto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Stock stock;
+
+    public Producto(Long id, String nombre, String descripcion, Double precio, Integer stock,
                     Categoria categoria, Proveedor proveedor, Marca marca, Descuento descuento) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
-
         this.categoria = categoria;
         this.proveedor = proveedor;
         this.marca = marca;
