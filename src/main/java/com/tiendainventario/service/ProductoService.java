@@ -23,7 +23,6 @@ public class ProductoService extends BaseService<Producto, Long, ProductoReposit
         producto.setNombre(productoActualizado.getNombre());
         producto.setDescripcion(productoActualizado.getDescripcion());
         producto.setPrecio(productoActualizado.getPrecio());
-        producto.setStock(productoActualizado.getStock());
         producto.setCategoria(productoActualizado.getCategoria());
         producto.setProveedor(productoActualizado.getProveedor());
         return repository.save(producto);

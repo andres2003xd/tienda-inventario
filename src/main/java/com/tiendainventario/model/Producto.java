@@ -23,7 +23,7 @@ public class Producto {
 
     private Double precio;
 
-    private Integer stock;
+
 
     @ManyToOne
     @JoinColumn(name = "id_categoria")
@@ -46,13 +46,13 @@ public class Producto {
     @JsonProperty("descuento")
     private Descuento descuento;
 
-    public Producto(Long id, String nombre, String descripcion, Double precio, Integer stock,
+    public Producto(Long id, String nombre, String descripcion, Double precio,
                     Categoria categoria, Proveedor proveedor, Marca marca, Descuento descuento) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
-        this.stock = stock;
+
         this.categoria = categoria;
         this.proveedor = proveedor;
         this.marca = marca;
@@ -120,12 +120,5 @@ public class Producto {
         this.proveedor = proveedor;
     }
 
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
 
 }
