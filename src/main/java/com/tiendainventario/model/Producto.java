@@ -120,5 +120,4 @@ public class Producto {
         this.proveedor = proveedor;
     }
 
-
 }
