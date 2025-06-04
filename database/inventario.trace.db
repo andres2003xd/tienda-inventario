@@ -2246,3 +2246,7 @@ The connection was not closed by the application and is garbage collected [90018
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:690)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
 	... 47 more
+2025-06-04 18:27:55.691835-05:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Tabla "PRODUCTOS" no encontrada
+Table "PRODUCTOS" not found; SQL statement:
+ALTER TABLE productos DROP COLUMN STOCK [42102-232]
