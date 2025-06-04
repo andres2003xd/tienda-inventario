@@ -28,6 +28,7 @@ public class ProductoService extends BaseService<Producto, Long, ProductoReposit
         return repository.save(producto);
     }
 
+
     @Override
     protected String getEntityName() {
         return "Producto";
