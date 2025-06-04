@@ -3,7 +3,6 @@ package com.tiendainventario.controller;
 import com.tiendainventario.model.Stock;
 import com.tiendainventario.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,45 +12,36 @@ import java.util.List;
 @RequestMapping("/api/stock")
 public class StockController {
 
-    private final StockService stockService;
-
     @Autowired
-    public StockController(StockService stockService) {
-        this.stockService = stockService;
-    }
+    private StockService stockService;
 
     @GetMapping
-    public ResponseEntity<List<Stock>> getAll() {
+    public ResponseEntity<List<Stock>> listarStock() {
         return ResponseEntity.ok(stockService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Stock> getById(@PathVariable Long id) {
+    public ResponseEntity<Stock> obtenerStock(@PathVariable Long id) {
         return ResponseEntity.ok(stockService.findById(id));
     }
 
     @GetMapping("/producto/{productoId}")
-    public ResponseEntity<Stock> getByProductoId(@PathVariable Long productoId) {
-        return ResponseEntity.ok(stockService.findByProductoId(productoId));
+    public ResponseEntity<Stock> obtenerStockPorProducto(@PathVariable Long productoId) {
+        return ResponseEntity.ok(stockService.obtenerStockPorProducto(productoId));
     }
 
     @PostMapping
-    public ResponseEntity<Stock> create(@RequestBody Stock stock) {
-        return new ResponseEntity<>(
-                stockService.create(stock),
-                HttpStatus.CREATED
-        );
+    public ResponseEntity<Stock> crearStock(@RequestBody Stock stock) {
+        return ResponseEntity.ok(stockService.crearStock(stock));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Stock> update(
-            @PathVariable Long id,
-            @RequestBody Stock stock) {
-        return ResponseEntity.ok(stockService.update(id, stock));
+    public ResponseEntity<Stock> actualizarStock(@PathVariable Long id, @RequestBody Stock stock) {
+        return ResponseEntity.ok(stockService.actualizarStock(id, stock));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<?> eliminarStock(@PathVariable Long id) {
         stockService.delete(id);
         return ResponseEntity.noContent().build();
     }
