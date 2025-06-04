@@ -35,6 +35,6 @@ public class CargoEmpleado {
         this.descripcion = descripcion;
         this.salarioBase = salarioBase;
     }
-
+//hola
 
 }
