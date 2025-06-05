@@ -40,4 +40,5 @@ public class ProveedorController {
         proveedorService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
 }

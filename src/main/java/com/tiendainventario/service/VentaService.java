@@ -27,4 +27,5 @@ public class VentaService extends BaseService<Venta, Long, VentaRepository> {
     protected String getEntityName() {
         return "Venta";
     }
+
 }

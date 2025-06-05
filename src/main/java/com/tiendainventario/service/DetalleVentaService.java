@@ -41,6 +41,7 @@ public class DetalleVentaService extends BaseService<DetalleVenta, Long, Detalle
         return repository.save(detalleExistente);
     }
 
+
     @Override
     protected String getEntityName() {
         return "DetalleVenta";

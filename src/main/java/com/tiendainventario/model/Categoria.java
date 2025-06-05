@@ -56,4 +56,5 @@ public class Categoria {
         this.descripcion = descripcion;
     }
 
+
 }

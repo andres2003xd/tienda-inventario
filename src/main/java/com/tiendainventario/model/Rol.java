@@ -60,4 +60,5 @@ public class Rol {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
+
 }

@@ -96,4 +96,5 @@ public class Usuario {
     public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
+
 }

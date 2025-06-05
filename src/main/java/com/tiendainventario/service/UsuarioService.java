@@ -32,4 +32,5 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
     protected String getEntityName() {
         return "Usuario";
     }
+
 }

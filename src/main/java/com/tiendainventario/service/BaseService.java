@@ -27,6 +27,5 @@ public abstract class BaseService<T, ID extends Long, R extends JpaRepository<T,
         }
         repository.deleteById(id);
     }
-
     protected abstract String getEntityName();
 }
