@@ -1,49 +1,15 @@
-package com.tiendainventario.controller;
+package com.tiendainventario.repository;
 
 import com.tiendainventario.model.Stock;
-import com.tiendainventario.service.StockService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
-@RestController
-@RequestMapping("/api/stock")
-public class StockController {
+@Repository
+public interface StockRepository extends JpaRepository<Stock, Long> {
+    Optional<Stock> findByProductoId(Long productoId);
+    boolean existsByProductoId(Long productoId);
 
-    @Autowired
-    private StockService stockService;
-
-    @GetMapping
-    public ResponseEntity<List<Stock>> listarStock() {
-        return ResponseEntity.ok(stockService.findAll());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Stock> obtenerStock(@PathVariable Long id) {
-        return ResponseEntity.ok(stockService.findById(id));
-    }
-
-    @GetMapping("/producto/{productoId}")
-    public ResponseEntity<Stock> obtenerStockPorProducto(@PathVariable Long productoId) {
-        return ResponseEntity.ok(stockService.obtenerStockPorProducto(productoId));
-    }
-
-    @PostMapping
-    public ResponseEntity<Stock> crearStock(@RequestBody Stock stock) {
-        return ResponseEntity.ok(stockService.crearStock(stock));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Stock> actualizarStock(@PathVariable Long id, @RequestBody Stock stock) {
-        return ResponseEntity.ok(stockService.actualizarStock(id, stock));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminarStock(@PathVariable Long id) {
-        stockService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
 
 }
