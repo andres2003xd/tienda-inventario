@@ -52,4 +52,5 @@ public class Empleado {
         this.email = email;
         this.fechaContratacion = fechaContratacion;
     }
+
 }

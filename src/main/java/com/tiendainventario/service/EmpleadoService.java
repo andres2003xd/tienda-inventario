@@ -72,6 +72,7 @@ public class EmpleadoService extends BaseService<Empleado, Long, EmpleadoReposit
         return repository.save(empleado);
     }
 
+
     @Override
     protected String getEntityName() {
         return "Empleado";
