@@ -45,4 +45,5 @@ public class StockController {
         stockService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
 }
