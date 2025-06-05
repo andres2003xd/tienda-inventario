@@ -1,42 +1,55 @@
+// Empleado.java
 package com.tiendainventario.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
-@Getter @Setter @NoArgsConstructor
+@Table(name = "EMPLEADO")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Empleado {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_empleado")
+    @Column(name = "ID_EMPLEADO")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_cargo", nullable = false)
+    @JoinColumn(name = "ID_CARGO", nullable = false)
     private CargoEmpleado cargo;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "NOMBRE", nullable = false)
     private String nombre;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "APELLIDO", nullable = false)
     private String apellido;
 
-    @Column(nullable = false, length = 20, unique = true)
+    @Column(name = "DOCUMENTO", nullable = false, unique = true)
     private String documento;
 
-    @Column(length = 20)
+    @Column(name = "TELEFONO")
     private String telefono;
 
-    @Column(length = 100)
+    @Column(name = "EMAIL", unique = true)
     private String email;
 
-    @Column(name = "fecha_contratacion", nullable = false)
+    @Column(name = "FECHA_CONTRATACION", nullable = false)
     private LocalDate fechaContratacion;
 
-    @OneToMany(mappedBy = "empleado")
-    private List<Rol> roles;
-
-
+    public Empleado(Long id, CargoEmpleado cargo, String nombre, String apellido,
+                    String documento, String telefono, String email, LocalDate fechaContratacion) {
+        this.id = id;
+        this.cargo = cargo;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.documento = documento;
+        this.telefono = telefono;
+        this.email = email;
+        this.fechaContratacion = fechaContratacion;
+    }
 }

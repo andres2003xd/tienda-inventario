@@ -46,9 +46,10 @@ public class Producto {
     @JsonProperty("descuento")
     private Descuento descuento;
 
-    @OneToOne(mappedBy = "producto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "producto", cascade = CascadeType.ALL)
     @JsonIgnore
     private Stock stock;
+
 
     public Producto(Long id, String nombre, String descripcion, Double precio, Integer stock,
                     Categoria categoria, Proveedor proveedor, Marca marca, Descuento descuento) {
@@ -122,5 +123,14 @@ public class Producto {
     public void setProveedor(Proveedor proveedor) {
         this.proveedor = proveedor;
     }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
+    }
+
 
 }

@@ -32,5 +32,69 @@ public class Descuento {
     @OneToMany(mappedBy = "descuento")
     private List<Producto> productos;
 
+    public Descuento(Long id, String nombre, BigDecimal porcentaje, LocalDate fechaInicio, LocalDate fechaFin, Boolean activo, List<Producto> productos) {
+        this.id = id;
+        this.nombre = nombre;
+        this.porcentaje = porcentaje;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.activo = activo;
+        this.productos = productos;
+    }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public BigDecimal getPorcentaje() {
+        return porcentaje;
+    }
+
+    public void setPorcentaje(BigDecimal porcentaje) {
+        this.porcentaje = porcentaje;
+    }
+
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    public List<Producto> getProductos() {
+        return productos;
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
+    }
 }
