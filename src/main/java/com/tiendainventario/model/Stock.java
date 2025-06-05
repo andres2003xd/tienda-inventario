@@ -39,4 +39,5 @@ public class Stock {
         this.stockMinimo = stockMinimo;
         this.stockMaximo = stockMaximo;
     }
+
 }
