@@ -3,6 +3,7 @@ package com.tiendainventario.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
@@ -30,6 +31,8 @@ public class Usuario {
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
 
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HistorialLogin> historialLogin;
 
     public Usuario(Long id, Rol rol, String username, String email, String password, Boolean activo, LocalDateTime fechaCreacion) {
         this.id = id;
