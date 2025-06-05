@@ -40,4 +40,5 @@ public class Stock {
         this.stockMaximo = stockMaximo;
     }
 
+
 }
