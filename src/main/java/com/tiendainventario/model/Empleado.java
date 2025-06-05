@@ -41,6 +41,7 @@ public class Empleado {
     @Column(name = "FECHA_CONTRATACION", nullable = false)
     private LocalDate fechaContratacion;
 
+
     public Empleado(Long id, CargoEmpleado cargo, String nombre, String apellido,
                     String documento, String telefono, String email, LocalDate fechaContratacion) {
         this.id = id;

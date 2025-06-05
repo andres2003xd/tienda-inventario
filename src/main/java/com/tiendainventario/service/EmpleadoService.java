@@ -73,6 +73,7 @@ public class EmpleadoService extends BaseService<Empleado, Long, EmpleadoReposit
     }
 
 
+
     @Override
     protected String getEntityName() {
         return "Empleado";
