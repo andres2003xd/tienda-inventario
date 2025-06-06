@@ -45,6 +45,17 @@ public class StockService extends BaseService<Stock, Long, StockRepository> {
         return repository.save(stock);
     }
 
+
+    // Agrega este método a tu StockService existente
+    @Transactional
+    public void actualizarStockPorEntrada(Long productoId, Integer cantidad) {
+        Stock stock = repository.findByProductoId(productoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Stock", "producto", productoId));
+
+        stock.setCantidad(stock.getCantidad() + cantidad);
+        repository.save(stock);
+    }
+
     public Stock obtenerStockPorProducto(Long productoId) {
         return repository.findByProductoId(productoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Stock", "producto", productoId));
