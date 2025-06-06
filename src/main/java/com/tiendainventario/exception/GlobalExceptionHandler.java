@@ -9,6 +9,25 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    // Definición de la excepción como clase interna estática
+    public static class StockInsuficienteException extends RuntimeException {
+        public StockInsuficienteException(String message) {
+            super(message);
+        }
+    }
+
+    // Manejador para la excepción
+    @ExceptionHandler(StockInsuficienteException.class)
+    public ResponseEntity<ErrorResponse> handleStockInsuficiente(StockInsuficienteException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    // ... otros manejadores de excepción permanecen igual ...
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
         ErrorResponse error = new ErrorResponse(
@@ -44,13 +63,11 @@ public class GlobalExceptionHandler {
         private String message;
         private LocalDateTime timestamp;
 
-        // Constructor, getters y setters
         public ErrorResponse(int status, String message, LocalDateTime timestamp) {
             this.status = status;
             this.message = message;
             this.timestamp = timestamp;
         }
-
 
         public int getStatus() { return status; }
         public String getMessage() { return message; }

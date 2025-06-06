@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "salidas_stock")
 @Getter @Setter @NoArgsConstructor
 public class SalidaStock {
 
@@ -14,11 +15,11 @@ public class SalidaStock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_producto", nullable = false)
     private Producto producto;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_empleado", nullable = false)
     private Empleado empleado;
 
@@ -32,4 +33,14 @@ public class SalidaStock {
 
     @Column(name = "id_venta")
     private Long idVenta;
+
+    // Constructor sin ID para creación
+    public SalidaStock(Producto producto, Empleado empleado, Integer cantidad,
+                       String motivo, Long idVenta) {
+        this.producto = producto;
+        this.empleado = empleado;
+        this.cantidad = cantidad;
+        this.motivo = motivo;
+        this.idVenta = idVenta;
+    }
 }

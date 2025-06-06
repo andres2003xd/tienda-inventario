@@ -1,5 +1,6 @@
 package com.tiendainventario.service;
 
+import com.tiendainventario.exception.GlobalExceptionHandler;
 import com.tiendainventario.exception.ResourceAlreadyExistsException;
 import com.tiendainventario.exception.ResourceNotFoundException;
 import com.tiendainventario.model.Stock;
@@ -53,6 +54,20 @@ public class StockService extends BaseService<Stock, Long, StockRepository> {
                 .orElseThrow(() -> new ResourceNotFoundException("Stock", "producto", productoId));
 
         stock.setCantidad(stock.getCantidad() + cantidad);
+        repository.save(stock);
+    }
+
+    @Transactional
+    public void actualizarStockPorSalida(Long productoId, Integer cantidad) {
+        Stock stock = repository.findByProductoId(productoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Stock", "producto", productoId));
+
+        if (stock.getCantidad() < cantidad) {
+            throw new GlobalExceptionHandler.StockInsuficienteException(
+                    "No se puede actualizar el stock: cantidad insuficiente");
+        }
+
+        stock.setCantidad(stock.getCantidad() - cantidad);
         repository.save(stock);
     }
 
