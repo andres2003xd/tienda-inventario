@@ -2,23 +2,24 @@ package com.tiendainventario.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "historial-login") // Mapeo al nombre de la tabla en la base de datos
+@Table(name = "historial-login")
 public class HistorialLogin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_login")
-    private Long id; // Corresponde a "id_login"
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario; // Relación con el usuario
+    private Usuario usuario;
 
     @Column(name = "fecha_login", nullable = false)
     private LocalDateTime fechaLogin;
@@ -28,8 +29,6 @@ public class HistorialLogin {
 
     @Column(length = 255)
     private String dispositivo;
-
-
 
     public HistorialLogin(Long id, Usuario usuario, LocalDateTime fechaLogin, String ip, String dispositivo) {
         this.id = id;
@@ -47,20 +46,20 @@ public class HistorialLogin {
         this.id = id;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
     public LocalDateTime getFechaLogin() {
         return fechaLogin;
     }
 
     public void setFechaLogin(LocalDateTime fechaLogin) {
         this.fechaLogin = fechaLogin;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public String getIp() {
@@ -78,4 +77,25 @@ public class HistorialLogin {
     public void setDispositivo(String dispositivo) {
         this.dispositivo = dispositivo;
     }
+
+    public Object getUsuarioAsJson() {
+        return usuario != null ? new UsuarioResponse(usuario.getId()) : null;
+    }
+
+    public static class UsuarioResponse {
+        private Long id;
+
+        public UsuarioResponse(Long id) {
+            this.id = id;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+    }
+
 }

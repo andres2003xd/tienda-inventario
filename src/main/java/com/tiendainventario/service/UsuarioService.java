@@ -5,6 +5,8 @@ import com.tiendainventario.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository> {
 
@@ -14,6 +16,9 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
 
     @Transactional
     public Usuario crearUsuario(Usuario usuario) {
+        if (usuario.getFechaCreacion() == null) {
+            usuario.setFechaCreacion(LocalDateTime.now()); // Establecer la fecha actual si no se especifica
+        }
         return repository.save(usuario);
     }
 
@@ -32,5 +37,4 @@ public class UsuarioService extends BaseService<Usuario, Long, UsuarioRepository
     protected String getEntityName() {
         return "Usuario";
     }
-
 }
