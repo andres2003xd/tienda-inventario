@@ -35,13 +35,14 @@ public class Producto {
 
     @ManyToOne
     @JoinColumn(name = "id_marca")
-    @JsonProperty("marca")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Marca marca;
 
     @ManyToOne
     @JoinColumn(name = "id_descuento")
-    @JsonProperty("descuento")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Descuento descuento;
+
 
     @OneToOne(mappedBy = "producto", cascade = CascadeType.ALL)
     @JsonIgnore
