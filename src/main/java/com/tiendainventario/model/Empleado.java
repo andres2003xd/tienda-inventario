@@ -1,4 +1,3 @@
-// Empleado.java
 package com.tiendainventario.model;
 
 import jakarta.persistence.*;
@@ -60,12 +59,36 @@ public class Empleado {
         this.id = id;
     }
 
+    public LocalDate getFechaContratacion() {
+        return fechaContratacion;
+    }
+
+    public void setFechaContratacion(LocalDate fechaContratacion) {
+        this.fechaContratacion = fechaContratacion;
+    }
+
     public CargoEmpleado getCargo() {
         return cargo;
     }
 
     public void setCargo(CargoEmpleado cargo) {
         this.cargo = cargo;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
     public String getApellido() {
@@ -84,35 +107,11 @@ public class Empleado {
         this.email = email;
     }
 
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public LocalDate getFechaContratacion() {
-        return fechaContratacion;
-    }
-
-    public void setFechaContratacion(LocalDate fechaContratacion) {
-        this.fechaContratacion = fechaContratacion;
-    }
-
     public String getDocumento() {
         return documento;
     }
 
     public void setDocumento(String documento) {
         this.documento = documento;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
     }
 }
