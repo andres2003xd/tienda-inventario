@@ -1,5 +1,7 @@
 package com.tiendainventario.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -19,6 +21,7 @@ public class MetodoPago {
     private String descripcion;
 
     @OneToMany(mappedBy = "metodoPago")
+    @JsonIgnore // Esta es la clave
     private List<Venta> ventas;
 
     public MetodoPago(Long id, String nombre, String descripcion, List<Venta> ventas) {

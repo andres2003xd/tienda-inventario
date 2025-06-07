@@ -37,6 +37,7 @@ public class Venta {
     @JsonProperty("empleado")
     private Empleado empleado;
 
+
     public Venta(Long id, LocalDateTime fecha, Double total, Cliente cliente,
                  MetodoPago metodoPago, Empleado empleado) {
         this.id = id;
