@@ -39,7 +39,7 @@ public class CargoEmpleadoController {
     public ResponseEntity<CargoEmpleado> actualizarCargo(@PathVariable Long id, @RequestBody CargoEmpleado cargo) {
         return ResponseEntity.ok(cargoService.actualizarCargo(id, cargo));
     }
-
+//prueba
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarCargo(@PathVariable Long id) {
         cargoService.delete(id);
