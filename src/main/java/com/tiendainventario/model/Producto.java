@@ -9,7 +9,6 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-
 public class Producto {
 
     @Id
@@ -24,12 +23,10 @@ public class Producto {
 
     private Double precio;
 
-
     @ManyToOne
     @JoinColumn(name = "id_categoria")
     @JsonProperty("categoria")
     private Categoria categoria;
-
 
     @ManyToOne
     @JoinColumn(name = "id_proveedor")
@@ -63,25 +60,20 @@ public class Producto {
         this.descuento = descuento;
     }
 
-    public Descuento getDescuento() {
-        return descuento;
-    }
-    public void setDescuento(Descuento descuento) {
-        this.descuento = descuento;
-    }
-    public Marca getMarca() {
-        return marca;
-    }
-    public void setMarca(Marca marca) {
-        this.marca = marca;
-    }
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
     }
 
     public String getNombre() {
@@ -108,14 +100,6 @@ public class Producto {
         this.precio = precio;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
-
     public Proveedor getProveedor() {
         return proveedor;
     }
@@ -124,13 +108,27 @@ public class Producto {
         this.proveedor = proveedor;
     }
 
-    public Stock getStock() {
-        return stock;
+    public Categoria getCategoria() {
+        return categoria;
     }
 
-    public void setStock(Stock stock) {
-        this.stock = stock;
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 
+    public Descuento getDescuento() {
+        return descuento;
+    }
 
+    public void setDescuento(Descuento descuento) {
+        this.descuento = descuento;
+    }
+
+    public Marca getMarca() {
+        return marca;
+    }
+
+    public void setMarca(Marca marca) {
+        this.marca = marca;
+    }
 }

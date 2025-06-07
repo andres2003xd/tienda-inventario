@@ -8,8 +8,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class Descuento {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_descuento")
@@ -29,7 +32,7 @@ public class Descuento {
 
     private Boolean activo = true;
 
-    @OneToMany(mappedBy = "descuento")
+    @OneToMany(mappedBy = "descuento", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Producto> productos;
 
     public Descuento(Long id, String nombre, BigDecimal porcentaje, LocalDate fechaInicio, LocalDate fechaFin, Boolean activo, List<Producto> productos) {
@@ -42,44 +45,12 @@ public class Descuento {
         this.productos = productos;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
     public BigDecimal getPorcentaje() {
         return porcentaje;
     }
 
     public void setPorcentaje(BigDecimal porcentaje) {
         this.porcentaje = porcentaje;
-    }
-
-    public LocalDate getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public void setFechaInicio(LocalDate fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    public LocalDate getFechaFin() {
-        return fechaFin;
-    }
-
-    public void setFechaFin(LocalDate fechaFin) {
-        this.fechaFin = fechaFin;
     }
 
     public Boolean getActivo() {
@@ -90,11 +61,43 @@ public class Descuento {
         this.activo = activo;
     }
 
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
     public List<Producto> getProductos() {
         return productos;
     }
 
     public void setProductos(List<Producto> productos) {
         this.productos = productos;
+    }
+
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

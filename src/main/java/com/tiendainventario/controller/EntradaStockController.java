@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/entradas-stock")
@@ -18,8 +20,38 @@ public class EntradaStockController {
     private EntradaStockService entradaStockService;
 
     @PostMapping
-    public ResponseEntity<EntradaStock> registrarEntrada(@RequestBody EntradaStock entrada) {
-        return ResponseEntity.ok(entradaStockService.registrarEntrada(entrada));
+    public ResponseEntity<Map<String, Object>> registrarEntrada(@RequestBody EntradaStock entrada) {
+        EntradaStock nuevaEntrada = entradaStockService.registrarEntrada(entrada);
+
+        // Construir respuesta en el formato requerido
+        Map<String, Object> respuesta = new LinkedHashMap<>();
+        respuesta.put("id", nuevaEntrada.getId());
+        respuesta.put("cantidad", nuevaEntrada.getCantidad());
+        respuesta.put("motivo", nuevaEntrada.getMotivo());
+        respuesta.put("numeroFactura", nuevaEntrada.getNumeroFactura());
+
+        // Producto
+        if (nuevaEntrada.getProducto() != null) {
+            Map<String, Object> producto = new LinkedHashMap<>();
+            producto.put("id", nuevaEntrada.getProducto().getId());
+            respuesta.put("producto", producto);
+        }
+
+        // Proveedor
+        if (nuevaEntrada.getProveedor() != null) {
+            Map<String, Object> proveedor = new LinkedHashMap<>();
+            proveedor.put("id", nuevaEntrada.getProveedor().getId());
+            respuesta.put("proveedor", proveedor);
+        }
+
+        // Empleado
+        if (nuevaEntrada.getEmpleado() != null) {
+            Map<String, Object> empleado = new LinkedHashMap<>();
+            empleado.put("id", nuevaEntrada.getEmpleado().getId());
+            respuesta.put("empleado", empleado);
+        }
+
+        return ResponseEntity.ok(respuesta);
     }
 
     @GetMapping
@@ -37,7 +69,6 @@ public class EntradaStockController {
         return ResponseEntity.ok(entradaStockService.obtenerPorProducto(productoId));
     }
 
-    // Nuevos endpoints agregados
     @GetMapping("/proveedor/{proveedorId}")
     public ResponseEntity<List<EntradaStock>> obtenerPorProveedor(@PathVariable Long proveedorId) {
         return ResponseEntity.ok(entradaStockService.obtenerPorProveedor(proveedorId));

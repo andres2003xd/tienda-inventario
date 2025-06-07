@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/salidas-stock")
@@ -18,8 +20,31 @@ public class SalidaStockController {
     private SalidaStockService salidaStockService;
 
     @PostMapping
-    public ResponseEntity<SalidaStock> registrarSalida(@RequestBody SalidaStock salida) {
-        return ResponseEntity.ok(salidaStockService.registrarSalida(salida));
+    public ResponseEntity<Map<String, Object>> registrarSalida(@RequestBody SalidaStock salida) {
+        SalidaStock nuevaSalida = salidaStockService.registrarSalida(salida);
+
+        // Construir respuesta en el formato requerido
+        Map<String, Object> respuesta = new LinkedHashMap<>();
+        respuesta.put("id", nuevaSalida.getId());
+        respuesta.put("cantidad", nuevaSalida.getCantidad());
+        respuesta.put("motivo", nuevaSalida.getMotivo());
+        respuesta.put("idVenta", nuevaSalida.getIdVenta());
+
+        // Producto
+        if (nuevaSalida.getProducto() != null) {
+            Map<String, Object> producto = new LinkedHashMap<>();
+            producto.put("id", nuevaSalida.getProducto().getId());
+            respuesta.put("producto", producto);
+        }
+
+        // Empleado
+        if (nuevaSalida.getEmpleado() != null) {
+            Map<String, Object> empleado = new LinkedHashMap<>();
+            empleado.put("id", nuevaSalida.getEmpleado().getId());
+            respuesta.put("empleado", empleado);
+        }
+
+        return ResponseEntity.ok(respuesta);
     }
 
     @GetMapping
