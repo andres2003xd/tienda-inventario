@@ -1,48 +1,30 @@
-package com.tiendainventario.controller;
+package com.tiendainventario.model;
 
-import com.tiendainventario.model.EstadoPQRS;
-import com.tiendainventario.service.EstadoPqrsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@Table(name = "ESTADO_PQRS")
+public class EstadoPQRS {
 
-@RestController
-@RequestMapping("/api/estados-pqrs")
-public class EstadoPqrsController {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_ESTADO")
+    private Long id;
 
-    @Autowired
-    private EstadoPqrsService estadoPqrsService;
+    @Column(name = "NOMBRE", nullable = false, unique = true)
+    private String nombre;
 
-    @GetMapping
-    public ResponseEntity<List<EstadoPQRS>> listarTodos() {
-        return ResponseEntity.ok(estadoPqrsService.findAll());
-    }
+    @Column(name = "DESCRIPCION")
+    private String descripcion;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<EstadoPQRS> obtenerPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(estadoPqrsService.findById(id));
-    }
-
-    @GetMapping("/nombre/{nombre}")
-    public ResponseEntity<EstadoPQRS> obtenerPorNombre(@PathVariable String nombre) {
-        return ResponseEntity.ok(estadoPqrsService.obtenerPorNombre(nombre));
-    }
-
-    @PostMapping
-    public ResponseEntity<EstadoPQRS> crearEstadoPqrs(@RequestBody EstadoPQRS estadoPQRS) {
-        return ResponseEntity.ok(estadoPqrsService.crearEstadoPqrs(estadoPQRS));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<EstadoPQRS> actualizarEstadoPqrs(@PathVariable Long id, @RequestBody EstadoPQRS estadoPQRS) {
-        return ResponseEntity.ok(estadoPqrsService.actualizarEstadoPqrs(id, estadoPQRS));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminarEstadoPqrs(@PathVariable Long id) {
-        estadoPqrsService.delete(id);
-        return ResponseEntity.noContent().build();
+    public EstadoPQRS(String nombre, String descripcion) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
     }
 }
