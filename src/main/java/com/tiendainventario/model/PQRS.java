@@ -1,4 +1,6 @@
 package com.tiendainventario.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -40,11 +42,14 @@ public class PQRS {
     @Column(name = "FECHA_CREACION", nullable = false)
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
+    @JsonIgnore
     @Column(name = "FECHA_CIERRE")
     private LocalDateTime fechaCierre;
 
+    @JsonIgnore
     @Column(name = "SOLUCION", columnDefinition = "TEXT")
     private String solucion;
+
 
     public PQRS(Cliente cliente, TipoPQRS tipo, EstadoPQRS estado,
                 String titulo, String descripcion) {
