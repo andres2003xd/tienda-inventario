@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -21,13 +22,42 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> obtenerUsuario(@PathVariable Long id) {
-        return ResponseEntity.ok(usuarioService.findById(id));
+    public ResponseEntity<Map<String, Object>> obtenerUsuario(@PathVariable Long id) {
+        Usuario usuario = usuarioService.findById(id);
+
+        // Estructura personalizada de la respuesta
+        return ResponseEntity.ok(
+                Map.of(
+                        "id", usuario.getId(),
+                        "rol", Map.of(
+                                "id", usuario.getRol().getId(),
+                                "tipoRol", usuario.getRol().getTipoRol(),
+                                "descripcion", usuario.getRol().getDescripcion()
+                        ),
+                        "username", usuario.getUsername(),
+                        "password", usuario.getPassword(),
+                        "email", usuario.getEmail(),
+                        "activo", usuario.getActivo(),
+                        "fechaCreacion", usuario.getFechaCreacion()
+                )
+        );
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
-        return ResponseEntity.ok(usuarioService.crearUsuario(usuario));
+    public ResponseEntity<Map<String, Object>> crearUsuario(@RequestBody Usuario usuario) {
+        Usuario creado = usuarioService.crearUsuario(usuario);
+
+        // Modificar la estructura de respuesta JSON
+        return ResponseEntity.ok(
+                Map.of(
+                        "rol", Map.of("id", creado.getRol().getId()),
+                        "username", creado.getUsername(),
+                        "password", creado.getPassword(),
+                        "email", creado.getEmail(),
+                        "activo", creado.getActivo(),
+                        "fechaCreacion", creado.getFechaCreacion()
+                )
+        );
     }
 
     @PutMapping("/{id}")
@@ -40,5 +70,4 @@ public class UsuarioController {
         usuarioService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
 }

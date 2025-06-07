@@ -4,29 +4,31 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class Rol {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_rol")
     private Long id;
 
-    @Column(length = 255)
+    @Column(name = "TIPO_ROL", length = 255)
+    private String tipoRol; // Nuevo atributo mapeado a la columna TIPO_ROL
+
+    @Column(length = 255, nullable = false, unique = true)
     private String descripcion;
 
-    @ManyToOne
-    @JoinColumn(name = "id_empleado")
-    private Empleado empleado;
-
-    @ManyToOne
-    @JoinColumn(name = "id_cliente")
-    private Cliente cliente;
-
-    public Rol(Long id, String descripcion, Empleado empleado, Cliente cliente) {
+    public Rol(Long id, String tipoRol, String descripcion) {
         this.id = id;
+        this.tipoRol = tipoRol;
         this.descripcion = descripcion;
-        this.empleado = empleado;
-        this.cliente = cliente;
+    }
+
+    public Rol(String tipoRol, String descripcion) {
+        this.tipoRol = tipoRol;
+        this.descripcion = descripcion;
     }
 
     public Long getId() {
@@ -37,6 +39,14 @@ public class Rol {
         this.id = id;
     }
 
+    public String getTipoRol() {
+        return tipoRol;
+    }
+
+    public void setTipoRol(String tipoRol) {
+        this.tipoRol = tipoRol;
+    }
+
     public String getDescripcion() {
         return descripcion;
     }
@@ -44,21 +54,4 @@ public class Rol {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-
-    public Empleado getEmpleado() {
-        return empleado;
-    }
-
-    public void setEmpleado(Empleado empleado) {
-        this.empleado = empleado;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
 }

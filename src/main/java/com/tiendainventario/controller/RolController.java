@@ -26,8 +26,12 @@ public class RolController {
     }
 
     @PostMapping
-    public ResponseEntity<Rol> crearRol(@RequestBody Rol rol) {
-        return ResponseEntity.ok(rolService.crearRol(rol));
+    public ResponseEntity<?> crearRol(@RequestBody Rol rol) {
+        try {
+            return ResponseEntity.ok(rolService.crearRol(rol));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
@@ -37,8 +41,6 @@ public class RolController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarRol(@PathVariable Long id) {
-        rolService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(403).body("No puedes eliminar los roles CLIENTE o EMPLEADO.");
     }
-
 }

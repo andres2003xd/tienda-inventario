@@ -1,12 +1,15 @@
 package com.tiendainventario.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,11 +34,21 @@ public class Usuario {
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HistorialLogin> historialLogin;
 
     public Usuario(Long id, Rol rol, String username, String email, String password, Boolean activo, LocalDateTime fechaCreacion) {
         this.id = id;
+        this.rol = rol;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.activo = activo;
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public Usuario(Rol rol, String username, String email, String password, Boolean activo, LocalDateTime fechaCreacion) {
         this.rol = rol;
         this.username = username;
         this.email = email;
@@ -60,14 +73,6 @@ public class Usuario {
         this.rol = rol;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -76,12 +81,12 @@ public class Usuario {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public List<HistorialLogin> getHistorialLogin() {
+        return historialLogin;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setHistorialLogin(List<HistorialLogin> historialLogin) {
+        this.historialLogin = historialLogin;
     }
 
     public Boolean getActivo() {
@@ -100,4 +105,19 @@ public class Usuario {
         this.fechaCreacion = fechaCreacion;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }
