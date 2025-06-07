@@ -28,6 +28,10 @@ public class ClienteService extends BaseService<Cliente, Long, ClienteRepository
         return repository.save(cliente);
     }
 
+    public boolean existsById(Long id) {
+        return repository.existsById(id);
+    }
+
 
     @Override
     protected String getEntityName() {

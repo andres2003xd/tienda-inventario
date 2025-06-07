@@ -19,7 +19,9 @@ public class EmpleadoService extends BaseService<Empleado, Long, EmpleadoReposit
         super(repository);
         this.cargoRepository = cargoRepository;
     }
-
+    public boolean existsById(Long id) {
+        return repository.existsById(id);
+    }
     @Override
     protected String getEntityName() {
         return "Empleado";
